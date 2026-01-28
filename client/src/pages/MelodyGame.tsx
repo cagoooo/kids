@@ -144,17 +144,17 @@ export default function MelodyGame() {
         onRestart={restart}
         colorClass="bg-[hsl(var(--macaron-purple))] text-[hsl(var(--macaron-purple-dark))]"
       >
-        <div className="flex flex-col items-center gap-6">
-          <h3 className="font-display text-2xl font-bold text-center">
+        <div className="flex flex-col items-center gap-4 sm:gap-6">
+          <h3 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-center px-2">
             {isPlaying ? "仔細聽旋律..." : "跟著彈奏一樣的旋律！"}
           </h3>
 
           {/* Progress dots */}
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-1.5 sm:gap-2 mb-2 sm:mb-4">
             {currentMelody.notes.map((_, idx) => (
               <div 
                 key={idx}
-                className={`w-4 h-4 rounded-full transition-all ${
+                className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all ${
                   idx < playerSequence.length 
                     ? showResult === "wrong" ? "bg-red-400" : "bg-white" 
                     : "bg-white/30"
@@ -164,7 +164,7 @@ export default function MelodyGame() {
           </div>
 
           {/* Animal Notes */}
-          <div className="flex gap-3 flex-wrap justify-center">
+          <div className="flex gap-2 sm:gap-3 flex-wrap justify-center px-2">
             {NOTES.map((note) => (
               <motion.button
                 key={note.id}
@@ -177,15 +177,15 @@ export default function MelodyGame() {
                 onClick={() => handleNoteClick(note.id)}
                 disabled={isPlaying}
                 className={`
-                  w-20 h-24 md:w-24 md:h-28 rounded-2xl flex flex-col items-center justify-center gap-1
-                  shadow-lg border-4 border-white transition-all
+                  w-14 h-16 sm:w-18 sm:h-22 md:w-24 md:h-28 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center gap-0.5 sm:gap-1
+                  shadow-lg border-2 sm:border-4 border-white transition-all
                   ${isPlaying ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                 `}
                 style={{ backgroundColor: note.color }}
                 data-testid={`note-${note.id}`}
               >
-                <span className="text-4xl md:text-5xl">{note.animal}</span>
-                <span className="font-display font-bold text-sm text-white/80">{note.name}</span>
+                <span className="text-2xl sm:text-3xl md:text-5xl">{note.animal}</span>
+                <span className="font-display font-bold text-xs sm:text-sm text-white/80">{note.name}</span>
               </motion.button>
             ))}
           </div>
@@ -196,7 +196,7 @@ export default function MelodyGame() {
             whileTap={{ scale: 0.95 }}
             onClick={playMelody}
             disabled={isPlaying}
-            className="mt-4 bg-white/40 px-6 py-3 rounded-full font-bold text-lg disabled:opacity-50"
+            className="mt-2 sm:mt-4 bg-white/40 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-base sm:text-lg disabled:opacity-50"
             data-testid="button-replay"
           >
             {isPlaying ? "播放中..." : "再聽一次"}

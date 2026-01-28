@@ -104,9 +104,9 @@ export default function BopomofoGame() {
         onRestart={restart}
         colorClass="bg-[hsl(var(--macaron-green))] text-[hsl(var(--macaron-green-dark))]"
       >
-        <div className="flex flex-col items-center gap-6 relative overflow-hidden min-h-[400px]">
+        <div className="flex flex-col items-center gap-4 sm:gap-6 relative overflow-hidden min-h-[350px] sm:min-h-[400px]">
           {/* Balloons at top */}
-          <div className="flex gap-6 justify-center">
+          <div className="flex gap-3 sm:gap-4 md:gap-6 justify-center">
             {options.map((initial, idx) => (
               <AnimatePresence key={initial}>
                 {!poppedBalloons.includes(initial) && (
@@ -118,18 +118,18 @@ export default function BopomofoGame() {
                     whileTap={{ scale: 0.9 }}
                     onClick={() => handleBalloonClick(initial)}
                     className={`
-                      w-20 h-24 md:w-24 md:h-28 rounded-full relative
+                      w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 rounded-full relative
                       ${balloonColors[idx % 3]}
                       shadow-lg flex items-center justify-center
                       cursor-pointer
                     `}
                     data-testid={`balloon-${initial}`}
                   >
-                    <span className="font-display text-3xl md:text-4xl font-bold text-white">
+                    <span className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white">
                       {initial}
                     </span>
                     {/* Balloon string */}
-                    <div className="absolute -bottom-6 w-0.5 h-6 bg-gray-400" />
+                    <div className="absolute -bottom-4 sm:-bottom-6 w-0.5 h-4 sm:h-6 bg-gray-400" />
                   </motion.button>
                 )}
               </AnimatePresence>
@@ -137,18 +137,18 @@ export default function BopomofoGame() {
           </div>
 
           {/* Question */}
-          <div className="bg-white/40 px-6 py-3 rounded-2xl mt-4">
-            <h3 className="font-display text-xl font-bold text-center">
+          <div className="bg-white/40 px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl mt-2 sm:mt-4">
+            <h3 className="font-display text-lg sm:text-xl font-bold text-center">
               「{currentWord.word}」的聲母是什麼？
             </h3>
-            <p className="text-center text-sm opacity-70">戳破正確的氣球！</p>
+            <p className="text-center text-xs sm:text-sm opacity-70">戳破正確的氣球！</p>
           </div>
 
           {/* Train */}
           <motion.div
             animate={{ x: trainPosition }}
             transition={{ type: "spring", stiffness: 50 }}
-            className="absolute bottom-0 flex items-end"
+            className="absolute bottom-0 flex items-end scale-75 sm:scale-90 md:scale-100 origin-bottom"
           >
             {/* Train engine */}
             <div className="bg-[hsl(var(--macaron-pink))] w-24 h-16 rounded-t-2xl relative">
@@ -167,9 +167,9 @@ export default function BopomofoGame() {
           </motion.div>
 
           {/* Track */}
-          <div className="absolute bottom-0 w-full h-4 bg-amber-800 flex items-center">
+          <div className="absolute bottom-0 w-full h-3 sm:h-4 bg-amber-800 flex items-center overflow-hidden">
             {[...Array(20)].map((_, i) => (
-              <div key={i} className="w-8 h-2 bg-amber-600 mx-2" />
+              <div key={i} className="w-6 sm:w-8 h-1.5 sm:h-2 bg-amber-600 mx-1 sm:mx-2 flex-shrink-0" />
             ))}
           </div>
         </div>

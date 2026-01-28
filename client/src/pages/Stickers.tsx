@@ -62,26 +62,26 @@ export default function Stickers() {
       <div className="space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-[hsl(var(--macaron-purple-dark))]">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[hsl(var(--macaron-purple-dark))]">
             貼紙收集冊
           </h1>
-          <p className="text-muted-foreground font-medium">
+          <p className="text-sm sm:text-base text-muted-foreground font-medium">
             玩遊戲收集可愛的馬卡龍貼紙！
           </p>
           
           {/* Progress */}
-          <div className="bg-white/60 backdrop-blur-md rounded-full px-6 py-3 inline-flex items-center gap-3 shadow-md">
-            <Star className="w-6 h-6 text-yellow-500 fill-yellow-400" />
-            <span className="font-display font-bold text-xl">
+          <div className="bg-white/60 backdrop-blur-md rounded-full px-4 sm:px-6 py-2 sm:py-3 inline-flex items-center gap-2 sm:gap-3 shadow-md">
+            <Star className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 fill-yellow-400" />
+            <span className="font-display font-bold text-lg sm:text-xl">
               {collectedCount} / {totalCount}
             </span>
-            <span className="text-muted-foreground">已收集</span>
+            <span className="text-sm sm:text-base text-muted-foreground">已收集</span>
           </div>
         </div>
 
         {/* Sticker Grid */}
-        <div className="bg-white/60 backdrop-blur-md rounded-[2rem] p-6 md:p-8 shadow-xl border-4 border-white">
-          <div className="grid grid-cols-4 md:grid-cols-5 gap-4">
+        <div className="bg-white/60 backdrop-blur-md rounded-xl sm:rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-xl border-2 sm:border-4 border-white">
+          <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
             {STICKERS.map((sticker, index) => {
               const isCollected = collectedStickers.includes(sticker.id);
               
@@ -92,8 +92,8 @@ export default function Stickers() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.05 }}
                   className={`
-                    aspect-square rounded-2xl flex flex-col items-center justify-center gap-1
-                    border-4 transition-all relative overflow-hidden
+                    aspect-square rounded-xl sm:rounded-2xl flex flex-col items-center justify-center gap-0.5 sm:gap-1
+                    border-2 sm:border-4 transition-all relative overflow-hidden
                     ${isCollected 
                       ? `bg-gradient-to-br ${getRarityColor(sticker.rarity)} ${getRarityBorder(sticker.rarity)} shadow-lg` 
                       : 'bg-gray-100 border-gray-200'}
@@ -102,8 +102,8 @@ export default function Stickers() {
                 >
                   {isCollected ? (
                     <>
-                      <span className="text-4xl md:text-5xl">{sticker.emoji}</span>
-                      <span className="text-xs font-bold text-white/80 hidden md:block">
+                      <span className="text-2xl sm:text-3xl md:text-5xl">{sticker.emoji}</span>
+                      <span className="text-[10px] sm:text-xs font-bold text-white/80 hidden sm:block">
                         {sticker.name}
                       </span>
                       {sticker.rarity === "傳說" && (
@@ -112,8 +112,8 @@ export default function Stickers() {
                     </>
                   ) : (
                     <div className="flex flex-col items-center text-gray-300">
-                      <Lock className="w-8 h-8" />
-                      <span className="text-xs mt-1">???</span>
+                      <Lock className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
+                      <span className="text-[10px] sm:text-xs mt-0.5 sm:mt-1">???</span>
                     </div>
                   )}
                 </motion.div>
@@ -123,18 +123,18 @@ export default function Stickers() {
         </div>
 
         {/* Legend */}
-        <div className="flex justify-center gap-4 flex-wrap">
-          <div className="flex items-center gap-2 bg-white/60 px-4 py-2 rounded-full">
-            <div className="w-4 h-4 rounded-full bg-gradient-to-br from-blue-200 to-green-200" />
-            <span className="text-sm font-medium">普通</span>
+        <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
+          <div className="flex items-center gap-1.5 sm:gap-2 bg-white/60 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-gradient-to-br from-blue-200 to-green-200" />
+            <span className="text-xs sm:text-sm font-medium">普通</span>
           </div>
-          <div className="flex items-center gap-2 bg-white/60 px-4 py-2 rounded-full">
-            <div className="w-4 h-4 rounded-full bg-gradient-to-br from-purple-300 to-pink-400" />
-            <span className="text-sm font-medium">稀有</span>
+          <div className="flex items-center gap-1.5 sm:gap-2 bg-white/60 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-gradient-to-br from-purple-300 to-pink-400" />
+            <span className="text-xs sm:text-sm font-medium">稀有</span>
           </div>
-          <div className="flex items-center gap-2 bg-white/60 px-4 py-2 rounded-full">
-            <div className="w-4 h-4 rounded-full bg-gradient-to-br from-yellow-300 to-orange-400" />
-            <span className="text-sm font-medium">傳說</span>
+          <div className="flex items-center gap-1.5 sm:gap-2 bg-white/60 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-gradient-to-br from-yellow-300 to-orange-400" />
+            <span className="text-xs sm:text-sm font-medium">傳說</span>
           </div>
         </div>
       </div>

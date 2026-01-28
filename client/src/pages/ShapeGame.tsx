@@ -13,17 +13,17 @@ const SHAPES = [
   { id: "star", name: "星形", color: "hsl(var(--macaron-yellow))" },
 ];
 
-function ShapeIcon({ shape, size = 60, filled = true }: { shape: string; size?: number; filled?: boolean }) {
+function ShapeIcon({ shape, size = 60, filled = true, className = "" }: { shape: string; size?: number; filled?: boolean; className?: string }) {
   const style = { width: size, height: size };
   
   switch (shape) {
     case "circle":
-      return <div style={style} className={`rounded-full ${filled ? 'bg-[hsl(var(--macaron-pink))]' : 'border-4 border-dashed border-[hsl(var(--macaron-pink-dark))]'}`} />;
+      return <div style={style} className={`rounded-full ${filled ? 'bg-[hsl(var(--macaron-pink))]' : 'border-2 sm:border-4 border-dashed border-[hsl(var(--macaron-pink-dark))]'} ${className}`} />;
     case "square":
-      return <div style={style} className={`rounded-lg ${filled ? 'bg-[hsl(var(--macaron-blue))]' : 'border-4 border-dashed border-[hsl(var(--macaron-blue-dark))]'}`} />;
+      return <div style={style} className={`rounded-lg ${filled ? 'bg-[hsl(var(--macaron-blue))]' : 'border-2 sm:border-4 border-dashed border-[hsl(var(--macaron-blue-dark))]'} ${className}`} />;
     case "triangle":
       return (
-        <div style={{ width: size, height: size * 0.866 }} className="relative">
+        <div style={{ width: size, height: size * 0.866 }} className={`relative ${className}`}>
           <div 
             className={filled ? '' : 'opacity-50'}
             style={{
@@ -38,7 +38,7 @@ function ShapeIcon({ shape, size = 60, filled = true }: { shape: string; size?: 
       );
     case "star":
       return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "hsl(var(--macaron-yellow))" : "none"} stroke={filled ? "none" : "hsl(var(--macaron-yellow-dark))"} strokeWidth="2" strokeDasharray={filled ? "0" : "4"}>
+        <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "hsl(var(--macaron-yellow))" : "none"} stroke={filled ? "none" : "hsl(var(--macaron-yellow-dark))"} strokeWidth="2" strokeDasharray={filled ? "0" : "4"} className={className}>
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
         </svg>
       );
@@ -65,11 +65,12 @@ function DraggableShape({ id, shape }: { id: string; shape: typeof SHAPES[0] }) 
       {...attributes}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      className="cursor-grab active:cursor-grabbing p-2 bg-white/50 rounded-2xl shadow-lg"
+      className="cursor-grab active:cursor-grabbing p-1.5 sm:p-2 bg-white/50 rounded-xl sm:rounded-2xl shadow-lg"
       onMouseEnter={() => speak(shape.name)}
       data-testid={`draggable-${id}`}
     >
-      <ShapeIcon shape={id} size={70} />
+      <div className="hidden sm:block"><ShapeIcon shape={id} size={70} /></div>
+      <div className="sm:hidden"><ShapeIcon shape={id} size={50} /></div>
     </motion.div>
   );
 }
@@ -81,15 +82,21 @@ function DroppableSlot({ id, isCorrect, hasShape }: { id: string; isCorrect: boo
     <div
       ref={setNodeRef}
       className={`
-        w-24 h-24 rounded-2xl flex items-center justify-center transition-all
+        w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all
         ${isOver ? 'scale-110 bg-white/60' : 'bg-white/30'}
-        ${isCorrect === true ? 'ring-4 ring-green-400 bg-green-100' : ''}
-        ${isCorrect === false ? 'ring-4 ring-red-400 animate-shake' : ''}
+        ${isCorrect === true ? 'ring-2 sm:ring-4 ring-green-400 bg-green-100' : ''}
+        ${isCorrect === false ? 'ring-2 sm:ring-4 ring-red-400 animate-shake' : ''}
       `}
       data-testid={`droppable-${id}`}
     >
-      {!hasShape && <ShapeIcon shape={id} size={60} filled={false} />}
-      {hasShape && <ShapeIcon shape={id} size={60} filled={true} />}
+      <div className="hidden sm:block">
+        {!hasShape && <ShapeIcon shape={id} size={60} filled={false} />}
+        {hasShape && <ShapeIcon shape={id} size={60} filled={true} />}
+      </div>
+      <div className="sm:hidden">
+        {!hasShape && <ShapeIcon shape={id} size={40} filled={false} />}
+        {hasShape && <ShapeIcon shape={id} size={40} filled={true} />}
+      </div>
     </div>
   );
 }
@@ -172,14 +179,14 @@ export default function ShapeGame() {
         colorClass="bg-[hsl(var(--macaron-yellow))] text-[hsl(var(--macaron-yellow-dark))]"
       >
         <DndContext onDragEnd={handleDragEnd}>
-          <div className="flex flex-col items-center gap-8">
-            <h3 className="font-display text-2xl font-bold text-center">
+          <div className="flex flex-col items-center gap-4 sm:gap-6 md:gap-8">
+            <h3 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-center">
               把餅乾放到正確的烤盤裡！
             </h3>
 
             {/* Baking Tray (Drop Zones) */}
-            <div className="bg-amber-100 p-6 rounded-[2rem] shadow-inner border-4 border-amber-200">
-              <div className="flex gap-4">
+            <div className="bg-amber-100 p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl md:rounded-[2rem] shadow-inner border-2 sm:border-4 border-amber-200">
+              <div className="flex gap-2 sm:gap-3 md:gap-4">
                 {targetSlots.map((slot) => (
                   <DroppableSlot 
                     key={slot} 
@@ -192,7 +199,7 @@ export default function ShapeGame() {
             </div>
 
             {/* Available Shapes */}
-            <div className="flex gap-4 mt-4">
+            <div className="flex gap-2 sm:gap-3 md:gap-4 mt-2 sm:mt-4">
               {availableShapes.map((shapeId) => {
                 const shape = SHAPES.find(s => s.id === shapeId)!;
                 return <DraggableShape key={shapeId} id={shapeId} shape={shape} />;

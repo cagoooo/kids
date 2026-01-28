@@ -79,43 +79,43 @@ export default function EnglishGame() {
         onRestart={restart}
         colorClass="bg-[hsl(var(--macaron-green))] text-[hsl(var(--macaron-green-dark))]"
       >
-        <div className="flex flex-col items-center gap-10">
+        <div className="flex flex-col items-center gap-6 sm:gap-8 md:gap-10">
           
           <motion.div
             animate={{ rotate: shake ? [-5, 5, -5, 5, 0] : 0 }}
-            className="bg-white/80 backdrop-blur-md p-10 rounded-full shadow-lg w-56 h-56 flex items-center justify-center border-8 border-white"
+            className="bg-white/80 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-full shadow-lg w-36 h-36 sm:w-44 sm:h-44 md:w-56 md:h-56 flex items-center justify-center border-4 sm:border-6 md:border-8 border-white"
           >
             {mode === "emoji-to-word" ? (
-              <span className="text-9xl filter drop-shadow-md">{target.emoji}</span>
+              <span className="text-6xl sm:text-7xl md:text-9xl filter drop-shadow-md">{target.emoji}</span>
             ) : (
               <div className="text-center">
-                <span className="font-display text-4xl font-bold block">{target.word}</span>
-                <span className="text-2xl text-muted-foreground">({target.chinese})</span>
+                <span className="font-display text-2xl sm:text-3xl md:text-4xl font-bold block">{target.word}</span>
+                <span className="text-lg sm:text-xl md:text-2xl text-muted-foreground">({target.chinese})</span>
               </div>
             )}
           </motion.div>
 
-          <h3 className="font-display text-3xl font-bold opacity-90">
+          <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-bold opacity-90">
             {mode === "emoji-to-word" ? "這是什麼？" : "選出正確的圖案！"}
           </h3>
 
-          <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full max-w-lg px-2">
             {options.map((opt, idx) => (
               <motion.button
                 key={idx}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleAnswer(opt.word)}
-                className="btn-macaron bg-white py-6 rounded-2xl text-[hsl(var(--macaron-green-dark))] hover:bg-white/90"
+                className="btn-macaron bg-white py-3 sm:py-4 md:py-6 rounded-xl md:rounded-2xl text-[hsl(var(--macaron-green-dark))] hover:bg-white/90"
                 data-testid={`button-english-${opt.word.toLowerCase()}`}
               >
                 {mode === "emoji-to-word" ? (
                   <div className="text-center">
-                    <span className="text-2xl font-bold font-display block">{opt.word}</span>
-                    <span className="text-lg text-muted-foreground">({opt.chinese})</span>
+                    <span className="text-lg sm:text-xl md:text-2xl font-bold font-display block">{opt.word}</span>
+                    <span className="text-sm sm:text-base md:text-lg text-muted-foreground">({opt.chinese})</span>
                   </div>
                 ) : (
-                  <span className="text-6xl">{opt.emoji}</span>
+                  <span className="text-4xl sm:text-5xl md:text-6xl">{opt.emoji}</span>
                 )}
               </motion.button>
             ))}

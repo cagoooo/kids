@@ -43,17 +43,17 @@ function DraggableEmotion({ emotion }: { emotion: typeof EMOTIONS[0] }) {
       {...listeners}
       {...attributes}
       whileHover={{ scale: 1.1 }}
-      className="flex flex-col items-center gap-1 cursor-grab active:cursor-grabbing"
+      className="flex flex-col items-center gap-0.5 sm:gap-1 cursor-grab active:cursor-grabbing"
       onMouseEnter={() => speak(emotion.name)}
       data-testid={`emotion-${emotion.id}`}
     >
       <div 
-        className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center shadow-lg border-4 border-white"
+        className="w-12 h-12 sm:w-14 sm:h-14 md:w-20 md:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg border-2 sm:border-4 border-white"
         style={{ backgroundColor: emotion.color }}
       >
-        <span className="text-3xl md:text-4xl">{emotion.weather}</span>
+        <span className="text-2xl sm:text-3xl md:text-4xl">{emotion.weather}</span>
       </div>
-      <span className="text-sm font-bold">{emotion.name}</span>
+      <span className="text-xs sm:text-sm font-bold">{emotion.name}</span>
     </motion.div>
   );
 }
@@ -70,20 +70,20 @@ function FaceDropzone({ currentEmotion, isCorrect }: { currentEmotion: string | 
         rotate: isCorrect === false ? [-5, 5, -5, 5, 0] : 0,
       }}
       className={`
-        w-40 h-40 md:w-48 md:h-48 rounded-full bg-[hsl(var(--macaron-yellow)/0.3)] 
-        flex items-center justify-center border-8 border-white shadow-xl
-        ${isOver ? 'ring-4 ring-white/50' : ''}
-        ${isCorrect === true ? 'ring-4 ring-green-400' : ''}
-        ${isCorrect === false ? 'ring-4 ring-red-400' : ''}
+        w-28 h-28 sm:w-36 sm:h-36 md:w-48 md:h-48 rounded-full bg-[hsl(var(--macaron-yellow)/0.3)] 
+        flex items-center justify-center border-4 sm:border-6 md:border-8 border-white shadow-xl
+        ${isOver ? 'ring-2 sm:ring-4 ring-white/50' : ''}
+        ${isCorrect === true ? 'ring-2 sm:ring-4 ring-green-400' : ''}
+        ${isCorrect === false ? 'ring-2 sm:ring-4 ring-red-400' : ''}
       `}
       data-testid="face-dropzone"
     >
       {currentEmotion ? (
-        <span className="text-8xl md:text-9xl">{emotion?.face}</span>
+        <span className="text-5xl sm:text-7xl md:text-9xl">{emotion?.face}</span>
       ) : (
         <div className="text-center text-gray-400">
-          <div className="text-6xl mb-2">😐</div>
-          <span className="text-sm">拖曳心情到這裡</span>
+          <div className="text-4xl sm:text-5xl md:text-6xl mb-1 sm:mb-2">😐</div>
+          <span className="text-xs sm:text-sm">拖曳心情到這裡</span>
         </div>
       )}
     </motion.div>
@@ -160,13 +160,13 @@ export default function EmotionGame() {
         colorClass="bg-[hsl(var(--macaron-purple))] text-[hsl(var(--macaron-purple-dark))]"
       >
         <DndContext onDragEnd={handleDragEnd}>
-          <div className="flex flex-col items-center gap-6">
+          <div className="flex flex-col items-center gap-3 sm:gap-4 md:gap-6">
             {/* Scenario */}
-            <div className="bg-white/40 px-6 py-4 rounded-2xl max-w-md">
-              <h3 className="font-display text-xl md:text-2xl font-bold text-center">
+            <div className="bg-white/40 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl max-w-md mx-2">
+              <h3 className="font-display text-base sm:text-lg md:text-2xl font-bold text-center">
                 {currentScenario.text}
               </h3>
-              <p className="text-center text-sm opacity-70 mt-2">
+              <p className="text-center text-xs sm:text-sm opacity-70 mt-1 sm:mt-2">
                 這時候會有什麼心情呢？
               </p>
             </div>
@@ -175,7 +175,7 @@ export default function EmotionGame() {
             <FaceDropzone currentEmotion={selectedEmotion} isCorrect={isCorrect} />
 
             {/* Emotion Options */}
-            <div className="flex gap-3 md:gap-4 flex-wrap justify-center mt-4">
+            <div className="flex gap-2 sm:gap-3 md:gap-4 flex-wrap justify-center mt-2 sm:mt-4 px-2">
               {EMOTIONS.map((emotion) => (
                 <DraggableEmotion key={emotion.id} emotion={emotion} />
               ))}

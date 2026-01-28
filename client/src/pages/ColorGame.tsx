@@ -85,7 +85,7 @@ export default function ColorGame() {
         onRestart={restart}
         colorClass="bg-[hsl(var(--macaron-pink))] text-[hsl(var(--macaron-pink-dark))]"
       >
-        <div className="flex flex-col items-center gap-12">
+        <div className="flex flex-col items-center gap-6 md:gap-12">
           {/* Question: The Color Swatch */}
           <motion.div
             animate={{ 
@@ -93,23 +93,23 @@ export default function ColorGame() {
               rotate: shake ? [-5, 5, -5, 5, 0] : 0 
             }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="w-48 h-48 md:w-64 md:h-64 rounded-[3rem] shadow-2xl border-8 border-white"
+            className="w-32 h-32 sm:w-40 sm:h-40 md:w-64 md:h-64 rounded-[2rem] md:rounded-[3rem] shadow-2xl border-4 md:border-8 border-white"
             style={{ backgroundColor: targetColor.hex }}
           />
 
-          <h3 className="font-display text-3xl font-bold text-center">
+          <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-center">
             這是什麼顏色？
           </h3>
 
           {/* Options */}
-          <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full max-w-lg px-2">
             {options.map((option, idx) => (
               <motion.button
                 key={option.id + idx}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleAnswer(option.id)}
-                className="btn-macaron bg-white text-2xl py-6 rounded-2xl text-[hsl(var(--macaron-pink-dark))] hover:bg-white/90"
+                className="btn-macaron bg-white text-lg sm:text-xl md:text-2xl py-3 sm:py-4 md:py-6 rounded-xl md:rounded-2xl text-[hsl(var(--macaron-pink-dark))] hover:bg-white/90"
                 data-testid={`button-color-${option.id}`}
               >
                 {option.name}

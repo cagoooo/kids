@@ -163,18 +163,18 @@ export default function ClockGame() {
         onRestart={restart}
         colorClass="bg-[hsl(var(--macaron-blue))] text-[hsl(var(--macaron-blue-dark))]"
       >
-        <div className="flex flex-col items-center gap-6">
-          <div className="bg-white/40 px-6 py-3 rounded-2xl">
-            <h3 className="font-display text-2xl font-bold text-center">
+        <div className="flex flex-col items-center gap-4 sm:gap-6">
+          <div className="bg-white/40 px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl">
+            <h3 className="font-display text-xl sm:text-2xl font-bold text-center">
               現在是 {targetTime.display}
             </h3>
-            <p className="text-center text-lg opacity-80">{targetTime.scenario}</p>
+            <p className="text-center text-base sm:text-lg opacity-80">{targetTime.scenario}</p>
           </div>
 
           {/* Clock */}
           <motion.div
             animate={{ rotate: shake ? [-5, 5, -5, 5, 0] : 0 }}
-            className="bg-white/20 p-4 rounded-full"
+            className="bg-white/20 p-2 sm:p-4 rounded-full"
           >
             <Clock 
               hour={selectedHour} 
@@ -183,7 +183,7 @@ export default function ClockGame() {
             />
           </motion.div>
 
-          <p className="text-lg font-medium opacity-80">
+          <p className="text-base sm:text-lg font-medium opacity-80 text-center px-4">
             點擊時鐘上的數字來調整時間
           </p>
 
@@ -191,7 +191,7 @@ export default function ClockGame() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleCheck}
-            className="bg-white text-[hsl(var(--macaron-blue-dark))] font-bold text-xl px-8 py-4 rounded-2xl shadow-lg"
+            className="bg-white text-[hsl(var(--macaron-blue-dark))] font-bold text-lg sm:text-xl px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg"
             data-testid="button-check"
           >
             確認答案
