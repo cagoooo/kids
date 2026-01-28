@@ -117,6 +117,9 @@ export function GameShell({
     }
   }, [isGameOver]);
 
+  const [savedScore, setSavedScore] = useState<number | null>(null);
+  const [scoreSaved, setScoreSaved] = useState(false);
+
   const handleSaveScore = async () => {
     if (!playerName.trim()) return;
     setIsSubmitting(true);
@@ -126,14 +129,22 @@ export function GameShell({
         gameType,
         score
       });
+      setSavedScore(score);
+      setScoreSaved(true);
       setShowSaveDialog(false);
-      setEarnedSticker(null);
-      onRestart();
     } catch (error) {
       console.error(error);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handlePlayAgain = () => {
+    setSavedScore(null);
+    setScoreSaved(false);
+    setEarnedSticker(null);
+    setPlayerName("");
+    onRestart();
   };
 
   const handleClose = () => {
@@ -196,7 +207,7 @@ export function GameShell({
               <div className="bg-white/30 backdrop-blur-md p-6 md:p-8 rounded-3xl w-full max-w-md">
                 <p className="text-xl md:text-2xl font-bold mb-2">最終得分</p>
                 <div className="text-6xl md:text-8xl font-black text-white text-shadow-lg mb-4">
-                  {score}
+                  {savedScore !== null ? savedScore : score}
                 </div>
                 
                 {earnedSticker && (
@@ -214,9 +225,15 @@ export function GameShell({
                     <div className="text-sm font-medium mt-1">{earnedSticker.name}</div>
                   </motion.div>
                 )}
+
+                {scoreSaved && (
+                  <div className="bg-green-100 text-green-700 px-4 py-2 rounded-xl mb-4 font-bold">
+                    分數已儲存！
+                  </div>
+                )}
                 
                 <button 
-                  onClick={onRestart}
+                  onClick={handlePlayAgain}
                   className="w-full bg-white text-current font-bold py-3 md:py-4 rounded-2xl text-lg md:text-xl shadow-lg hover:scale-105 transition-transform"
                   data-testid="button-play-again"
                 >
