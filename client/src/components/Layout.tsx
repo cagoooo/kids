@@ -15,18 +15,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Star className="text-white w-6 h-6 fill-current" />
             </div>
             <span className="font-display text-2xl md:text-3xl font-bold text-foreground tracking-tight text-shadow">
-              Kids<span className="text-[hsl(var(--macaron-pink-dark))]">Zone</span>
+              童樂<span className="text-[hsl(var(--macaron-pink-dark))]">學園</span>
             </span>
           </Link>
 
           <nav className="flex items-center gap-2 md:gap-4">
             <Link href="/">
-              <div className={`p-3 rounded-full transition-all cursor-pointer ${location === '/' ? 'bg-[hsl(var(--macaron-blue))] text-white shadow-md' : 'hover:bg-gray-100 text-gray-500'}`}>
+              <div 
+                className={`p-3 rounded-full transition-all cursor-pointer ${location === '/' ? 'bg-[hsl(var(--macaron-blue))] text-white shadow-md' : 'hover:bg-gray-100 text-gray-500'}`}
+                data-testid="nav-home"
+              >
                 <Home className="w-6 h-6" />
               </div>
             </Link>
             <Link href="/scores">
-              <div className={`p-3 rounded-full transition-all cursor-pointer ${location === '/scores' ? 'bg-[hsl(var(--macaron-yellow))] text-orange-900 shadow-md' : 'hover:bg-gray-100 text-gray-500'}`}>
+              <div 
+                className={`p-3 rounded-full transition-all cursor-pointer ${location === '/scores' ? 'bg-[hsl(var(--macaron-yellow))] text-orange-900 shadow-md' : 'hover:bg-gray-100 text-gray-500'}`}
+                data-testid="nav-scores"
+              >
                 <Trophy className="w-6 h-6" />
               </div>
             </Link>
@@ -49,7 +55,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Footer */}
       <footer className="p-6 text-center text-[hsl(var(--macaron-purple-dark))] opacity-60 font-display text-sm">
-        Made with 💖 for Learning • Macaron Theme
+        用愛製作 · 馬卡龍主題
       </footer>
     </div>
   );

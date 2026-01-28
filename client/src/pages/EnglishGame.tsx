@@ -5,18 +5,18 @@ import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 
 const WORDS = [
-  { word: "Apple", emoji: "🍎" },
-  { word: "Dog", emoji: "🐶" },
-  { word: "Cat", emoji: "🐱" },
-  { word: "Car", emoji: "🚗" },
-  { word: "Ball", emoji: "⚽" },
-  { word: "Sun", emoji: "☀️" },
-  { word: "Book", emoji: "📚" },
-  { word: "Fish", emoji: "🐠" },
-  { word: "Tree", emoji: "🌳" },
-  { word: "House", emoji: "🏠" },
-  { word: "Star", emoji: "⭐" },
-  { word: "Moon", emoji: "🌙" },
+  { word: "Apple", chinese: "蘋果", emoji: "🍎" },
+  { word: "Dog", chinese: "狗", emoji: "🐶" },
+  { word: "Cat", chinese: "貓", emoji: "🐱" },
+  { word: "Car", chinese: "汽車", emoji: "🚗" },
+  { word: "Ball", chinese: "球", emoji: "⚽" },
+  { word: "Sun", chinese: "太陽", emoji: "☀️" },
+  { word: "Book", chinese: "書", emoji: "📚" },
+  { word: "Fish", chinese: "魚", emoji: "🐠" },
+  { word: "Tree", chinese: "樹", emoji: "🌳" },
+  { word: "House", chinese: "房子", emoji: "🏠" },
+  { word: "Star", chinese: "星星", emoji: "⭐" },
+  { word: "Moon", chinese: "月亮", emoji: "🌙" },
 ];
 
 export default function EnglishGame() {
@@ -70,7 +70,7 @@ export default function EnglishGame() {
   return (
     <Layout>
       <GameShell
-        title="Word Match"
+        title="單字配對"
         score={score}
         totalQuestions={10}
         currentQuestionIndex={questionIndex}
@@ -88,12 +88,15 @@ export default function EnglishGame() {
             {mode === "emoji-to-word" ? (
               <span className="text-9xl filter drop-shadow-md">{target.emoji}</span>
             ) : (
-              <span className="font-display text-5xl font-bold">{target.word}</span>
+              <div className="text-center">
+                <span className="font-display text-4xl font-bold block">{target.word}</span>
+                <span className="text-2xl text-muted-foreground">({target.chinese})</span>
+              </div>
             )}
           </motion.div>
 
           <h3 className="font-display text-3xl font-bold opacity-90">
-            {mode === "emoji-to-word" ? "What is this?" : "Pick the picture!"}
+            {mode === "emoji-to-word" ? "這是什麼？" : "選出正確的圖案！"}
           </h3>
 
           <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
@@ -104,9 +107,13 @@ export default function EnglishGame() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleAnswer(opt.word)}
                 className="btn-macaron bg-white py-6 rounded-2xl text-[hsl(var(--macaron-green-dark))] hover:bg-white/90"
+                data-testid={`button-english-${opt.word.toLowerCase()}`}
               >
                 {mode === "emoji-to-word" ? (
-                  <span className="text-3xl font-bold font-display">{opt.word}</span>
+                  <div className="text-center">
+                    <span className="text-2xl font-bold font-display block">{opt.word}</span>
+                    <span className="text-lg text-muted-foreground">({opt.chinese})</span>
+                  </div>
                 ) : (
                   <span className="text-6xl">{opt.emoji}</span>
                 )}

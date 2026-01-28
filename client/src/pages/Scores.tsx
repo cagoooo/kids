@@ -10,9 +10,9 @@ export default function Scores() {
   const { data: scores, isLoading } = useScores(activeTab);
 
   const tabs = [
-    { id: "color", label: "Colors", icon: Palette, color: "text-[hsl(var(--macaron-pink-dark))]", bg: "bg-[hsl(var(--macaron-pink))]" },
-    { id: "math", label: "Math", icon: Calculator, color: "text-[hsl(var(--macaron-blue-dark))]", bg: "bg-[hsl(var(--macaron-blue))]" },
-    { id: "english", label: "Words", icon: BookOpen, color: "text-[hsl(var(--macaron-green-dark))]", bg: "bg-[hsl(var(--macaron-green))]" },
+    { id: "color", label: "顏色", icon: Palette, color: "text-[hsl(var(--macaron-pink-dark))]", bg: "bg-[hsl(var(--macaron-pink))]" },
+    { id: "math", label: "數學", icon: Calculator, color: "text-[hsl(var(--macaron-blue-dark))]", bg: "bg-[hsl(var(--macaron-blue))]" },
+    { id: "english", label: "英文", icon: BookOpen, color: "text-[hsl(var(--macaron-green-dark))]", bg: "bg-[hsl(var(--macaron-green))]" },
   ] as const;
 
   return (
@@ -20,9 +20,9 @@ export default function Scores() {
       <div className="space-y-6">
         <div className="text-center space-y-2">
           <h1 className="font-display text-4xl md:text-5xl font-bold text-[hsl(var(--macaron-purple-dark))]">
-            Hall of Fame 🏆
+            榮譽榜
           </h1>
-          <p className="text-muted-foreground font-medium">Top players and smart cookies!</p>
+          <p className="text-muted-foreground font-medium">最厲害的小朋友都在這裡！</p>
         </div>
 
         {/* Tab Switcher */}
@@ -37,6 +37,7 @@ export default function Scores() {
                   ? `${tab.bg} ${tab.color} shadow-md scale-105` 
                   : 'bg-white text-gray-500 hover:bg-gray-50'}
               `}
+              data-testid={`tab-${tab.id}`}
             >
               <tab.icon className="w-5 h-5" />
               {tab.label}
@@ -64,6 +65,7 @@ export default function Scores() {
                     flex items-center justify-between p-4 rounded-2xl border-2
                     ${index === 0 ? 'bg-yellow-100 border-yellow-200 shadow-md' : 'bg-white border-transparent hover:border-gray-100'}
                   `}
+                  data-testid={`score-row-${index}`}
                 >
                   <div className="flex items-center gap-4">
                     <div className={`
@@ -79,7 +81,7 @@ export default function Scores() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2 font-bold text-2xl text-[hsl(var(--macaron-purple-dark))]">
-                    {score.score} <span className="text-sm opacity-50 font-normal self-end mb-1">pts</span>
+                    {score.score} <span className="text-sm opacity-50 font-normal self-end mb-1">分</span>
                   </div>
                 </motion.div>
               ))}
@@ -87,8 +89,8 @@ export default function Scores() {
           ) : (
             <div className="flex flex-col items-center justify-center h-64 text-center opacity-50">
               <Trophy className="w-16 h-16 mb-4 text-gray-300" />
-              <p className="font-display text-xl">No scores yet!</p>
-              <p className="text-sm">Be the first to play!</p>
+              <p className="font-display text-xl">還沒有分數喔！</p>
+              <p className="text-sm">快來成為第一個挑戰者吧！</p>
             </div>
           )}
         </div>

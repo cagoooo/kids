@@ -3,18 +3,17 @@ import { Layout } from "@/components/Layout";
 import { GameShell } from "@/components/GameShell";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
-import useSound from "use-sound"; // Assuming we might add sounds later, for now visual only
 
-// Game Data
+// Game Data - Traditional Chinese color names
 const COLORS = [
-  { name: "Red", hex: "#FF6B6B", id: "red" },
-  { name: "Blue", hex: "#4D96FF", id: "blue" },
-  { name: "Green", hex: "#6BCB77", id: "green" },
-  { name: "Yellow", hex: "#FFD93D", id: "yellow" },
-  { name: "Purple", hex: "#9D4EDD", id: "purple" },
-  { name: "Orange", hex: "#FF9F45", id: "orange" },
-  { name: "Pink", hex: "#FF99CC", id: "pink" },
-  { name: "Brown", hex: "#8D6E63", id: "brown" },
+  { name: "紅色", hex: "#FF6B6B", id: "red" },
+  { name: "藍色", hex: "#4D96FF", id: "blue" },
+  { name: "綠色", hex: "#6BCB77", id: "green" },
+  { name: "黃色", hex: "#FFD93D", id: "yellow" },
+  { name: "紫色", hex: "#9D4EDD", id: "purple" },
+  { name: "橘色", hex: "#FF9F45", id: "orange" },
+  { name: "粉紅色", hex: "#FF99CC", id: "pink" },
+  { name: "棕色", hex: "#8D6E63", id: "brown" },
 ];
 
 export default function ColorGame() {
@@ -77,7 +76,7 @@ export default function ColorGame() {
   return (
     <Layout>
       <GameShell
-        title="Color Match"
+        title="顏色配對"
         score={score}
         totalQuestions={10}
         currentQuestionIndex={questionIndex}
@@ -99,7 +98,7 @@ export default function ColorGame() {
           />
 
           <h3 className="font-display text-3xl font-bold text-center">
-            What color is this?
+            這是什麼顏色？
           </h3>
 
           {/* Options */}
@@ -111,6 +110,7 @@ export default function ColorGame() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleAnswer(option.id)}
                 className="btn-macaron bg-white text-2xl py-6 rounded-2xl text-[hsl(var(--macaron-pink-dark))] hover:bg-white/90"
+                data-testid={`button-color-${option.id}`}
               >
                 {option.name}
               </motion.button>

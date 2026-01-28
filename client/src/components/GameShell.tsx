@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { ArrowLeft, Star, Volume2 } from "lucide-react";
+import { ArrowLeft, Star } from "lucide-react";
 import { Link } from "wouter";
 import { useAddScore } from "@/hooks/use-scores";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -78,7 +78,10 @@ export function GameShell({
       {/* Game Header */}
       <div className="flex justify-between items-center mb-8 relative z-10">
         <Link href="/">
-          <button className="bg-white/40 hover:bg-white/60 p-3 rounded-2xl transition-all hover:scale-105 active:scale-95 text-inherit">
+          <button 
+            className="bg-white/40 hover:bg-white/60 p-3 rounded-2xl transition-all hover:scale-105 active:scale-95 text-inherit"
+            data-testid="button-back"
+          >
             <ArrowLeft className="w-8 h-8 stroke-[3]" />
           </button>
         </Link>
@@ -115,18 +118,19 @@ export function GameShell({
               className="text-center flex flex-col items-center gap-6 py-10"
             >
               <h1 className="font-display text-6xl font-black text-white text-shadow-lg">
-                Great Job!
+                太棒了！
               </h1>
               <div className="bg-white/30 backdrop-blur-md p-8 rounded-3xl w-full max-w-md">
-                <p className="text-2xl font-bold mb-2">Final Score</p>
+                <p className="text-2xl font-bold mb-2">最終得分</p>
                 <div className="text-8xl font-black text-white text-shadow-lg mb-4">
                   {score}
                 </div>
                 <button 
                   onClick={onRestart}
                   className="w-full bg-white text-current font-bold py-4 rounded-2xl text-xl shadow-lg hover:scale-105 transition-transform"
+                  data-testid="button-play-again"
                 >
-                  Play Again
+                  再玩一次
                 </button>
               </div>
             </motion.div>
@@ -139,21 +143,22 @@ export function GameShell({
         <DialogContent className="sm:max-w-md border-4 border-[hsl(var(--macaron-purple))] rounded-3xl bg-white/95 backdrop-blur-xl">
           <DialogHeader>
             <DialogTitle className="font-display text-3xl text-center text-[hsl(var(--macaron-purple-dark))]">
-              New High Score! 🏆
+              新紀錄！
             </DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-4 py-4">
             <div className="text-center text-lg text-muted-foreground">
-              You scored <span className="font-bold text-[hsl(var(--macaron-purple))] text-2xl">{score}</span> points!
+              你得了 <span className="font-bold text-[hsl(var(--macaron-purple))] text-2xl">{score}</span> 分！
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-bold ml-1">Your Name</label>
+              <label className="text-sm font-bold ml-1">你的名字</label>
               <Input
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
-                placeholder="Enter your name..."
+                placeholder="輸入你的名字..."
                 className="text-lg py-6 rounded-xl border-2 border-gray-200 focus-visible:ring-[hsl(var(--macaron-purple))]"
                 autoFocus
+                data-testid="input-player-name"
               />
             </div>
           </div>
@@ -162,8 +167,9 @@ export function GameShell({
               onClick={handleSaveScore}
               disabled={!playerName.trim() || isSubmitting}
               className="w-full btn-macaron btn-purple text-lg py-6 rounded-xl"
+              data-testid="button-save-score"
             >
-              {isSubmitting ? "Saving..." : "Save My Score"}
+              {isSubmitting ? "儲存中..." : "儲存分數"}
             </Button>
           </DialogFooter>
         </DialogContent>

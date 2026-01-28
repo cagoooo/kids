@@ -70,7 +70,7 @@ export default function MathGame() {
   return (
     <Layout>
       <GameShell
-        title="Math Fun"
+        title="數學樂園"
         score={score}
         totalQuestions={10}
         currentQuestionIndex={questionIndex}
@@ -117,6 +117,7 @@ export default function MathGame() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleAnswer(opt)}
                 className="btn-macaron bg-white text-4xl py-8 rounded-2xl text-[hsl(var(--macaron-blue-dark))] hover:bg-white/90"
+                data-testid={`button-math-${opt}`}
               >
                 {opt}
               </motion.button>
