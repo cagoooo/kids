@@ -2,7 +2,12 @@
 
 ## Overview
 
-A children's educational gaming platform built with React and Express, featuring multiple interactive learning games in Traditional Chinese. The application includes games for colors, math, English vocabulary, shapes, melody recognition, clock reading, bopomofo (Chinese phonetic symbols), and emotion recognition. Players earn points and collect virtual stickers as rewards.
+A children's educational gaming platform built with React and Express, featuring 13 interactive learning games in Traditional Chinese. The application includes games for:
+- **Core subjects**: Colors, Math, English vocabulary, Shapes, Clock reading
+- **Language**: Bopomofo (Chinese phonetic symbols), Melody recognition
+- **Life skills**: Emotion recognition, Coding basics, Plant growth, Shopping/money, Recycling, Memory training
+
+Players earn points, collect virtual stickers as rewards, and unlock achievement certificates that can be printed.
 
 ## User Preferences
 
@@ -44,6 +49,20 @@ Each game follows a consistent pattern:
 3. Confetti celebration on correct answers
 4. Sticker rewards system stored in localStorage
 5. High score submission to server on game completion
+
+### Certificate System
+- 4 unlockable achievements based on scores and sticker collection
+- Printable certificates with player names
+- Achievement badges: Math Master, Word Explorer, Sticker Collector, Super Kid
+- Progress tracked via localStorage and server scores
+
+### Recent Additions (January 2026)
+- **Coding Adventure**: Grid-based unplugged coding game with command blocks
+- **Magic Garden**: Plant growth sequence learning (seed→water→sun→fertilize)
+- **Supermarket Helper**: Shopping simulation with coin-based money calculation
+- **Happy Recycle**: Drag-and-drop trash sorting game
+- **Memory Forest**: Classic card matching memory game
+- **Certificate System**: Achievement badges with printable rewards
 
 ## External Dependencies
 
