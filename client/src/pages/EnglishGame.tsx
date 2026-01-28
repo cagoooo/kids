@@ -3,6 +3,7 @@ import { Layout } from "@/components/Layout";
 import { GameShell } from "@/components/GameShell";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
+import { SpeakableOption } from "@/components/SpeakableOption";
 
 const WORDS = [
   { word: "Apple", chinese: "蘋果", emoji: "🍎" },
@@ -99,13 +100,12 @@ export default function EnglishGame() {
             {mode === "emoji-to-word" ? "這是什麼？" : "選出正確的圖案！"}
           </h3>
 
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full max-w-lg px-2">
+          <div className="grid grid-cols-2 gap-4 sm:gap-5 md:gap-6 w-full max-w-lg px-2">
             {options.map((opt, idx) => (
-              <motion.button
+              <SpeakableOption
                 key={idx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleAnswer(opt.word)}
+                speakText={mode === "emoji-to-word" ? `${opt.word}，${opt.chinese}` : opt.chinese}
+                onSelect={() => handleAnswer(opt.word)}
                 className="btn-macaron bg-white py-3 sm:py-4 md:py-6 rounded-xl md:rounded-2xl text-[hsl(var(--macaron-green-dark))] hover:bg-white/90"
                 data-testid={`button-english-${opt.word.toLowerCase()}`}
               >
@@ -117,7 +117,7 @@ export default function EnglishGame() {
                 ) : (
                   <span className="text-4xl sm:text-5xl md:text-6xl">{opt.emoji}</span>
                 )}
-              </motion.button>
+              </SpeakableOption>
             ))}
           </div>
         </div>

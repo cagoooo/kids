@@ -3,6 +3,7 @@ import { Layout } from "@/components/Layout";
 import { GameShell } from "@/components/GameShell";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
+import { SpeakableOption } from "@/components/SpeakableOption";
 
 // Game Data - Traditional Chinese color names
 const COLORS = [
@@ -102,18 +103,17 @@ export default function ColorGame() {
           </h3>
 
           {/* Options */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full max-w-lg px-2">
+          <div className="grid grid-cols-2 gap-4 sm:gap-5 md:gap-6 w-full max-w-lg px-2 mt-2">
             {options.map((option, idx) => (
-              <motion.button
+              <SpeakableOption
                 key={option.id + idx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleAnswer(option.id)}
+                speakText={option.name}
+                onSelect={() => handleAnswer(option.id)}
                 className="btn-macaron bg-white text-lg sm:text-xl md:text-2xl py-3 sm:py-4 md:py-6 rounded-xl md:rounded-2xl text-[hsl(var(--macaron-pink-dark))] hover:bg-white/90"
                 data-testid={`button-color-${option.id}`}
               >
                 {option.name}
-              </motion.button>
+              </SpeakableOption>
             ))}
           </div>
         </div>

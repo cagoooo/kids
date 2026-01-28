@@ -4,6 +4,7 @@ import { GameShell } from "@/components/GameShell";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Apple } from "lucide-react";
+import { SpeakableOption } from "@/components/SpeakableOption";
 
 export default function MathGame() {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -109,18 +110,17 @@ export default function MathGame() {
           </motion.div>
 
           {/* Options */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full max-w-lg mt-2 sm:mt-4 px-2">
+          <div className="grid grid-cols-2 gap-4 sm:gap-5 md:gap-6 w-full max-w-lg mt-4 sm:mt-6 px-2">
             {options.map((opt, idx) => (
-              <motion.button
+              <SpeakableOption
                 key={idx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleAnswer(opt)}
+                speakText={String(opt)}
+                onSelect={() => handleAnswer(opt)}
                 className="btn-macaron bg-white text-2xl sm:text-3xl md:text-4xl py-4 sm:py-6 md:py-8 rounded-xl md:rounded-2xl text-[hsl(var(--macaron-blue-dark))] hover:bg-white/90"
                 data-testid={`button-math-${opt}`}
               >
                 {opt}
-              </motion.button>
+              </SpeakableOption>
             ))}
           </div>
         </div>

@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Layout } from "@/components/Layout";
 import { GameShell } from "@/components/GameShell";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { useTTS } from "@/hooks/use-tts";
+import { Volume2 } from "lucide-react";
 
 const BOPOMOFO_WORDS = [
   { word: "蘋果", emoji: "🍎", initial: "ㄆ", pinyin: "píng guǒ" },
@@ -30,6 +31,7 @@ export default function BopomofoGame() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [poppedBalloons, setPoppedBalloons] = useState<string[]>([]);
   const [trainPosition, setTrainPosition] = useState(-100);
+  const [listenedBalloons, setListenedBalloons] = useState<string[]>([]);
   const { speak } = useTTS();
 
   const setupRound = () => {
@@ -48,6 +50,7 @@ export default function BopomofoGame() {
     
     setOptions([word.initial, ...distractors].sort(() => 0.5 - Math.random()));
     setPoppedBalloons([]);
+    setListenedBalloons([]);
     setTrainPosition(-100);
     
     setTimeout(() => {
@@ -62,6 +65,12 @@ export default function BopomofoGame() {
 
   const handleBalloonClick = (initial: string) => {
     if (poppedBalloons.includes(initial)) return;
+    
+    if (!listenedBalloons.includes(initial)) {
+      speak(initial);
+      setListenedBalloons(prev => [...prev, initial]);
+      return;
+    }
     
     setPoppedBalloons(prev => [...prev, initial]);
     
@@ -128,6 +137,12 @@ export default function BopomofoGame() {
                     <span className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white">
                       {initial}
                     </span>
+                    {/* Listen indicator */}
+                    <div className={`absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center ${
+                      listenedBalloons.includes(initial) ? 'bg-green-500' : 'bg-orange-400'
+                    }`}>
+                      <Volume2 className="w-3 h-3 text-white" />
+                    </div>
                     {/* Balloon string */}
                     <div className="absolute -bottom-4 sm:-bottom-6 w-0.5 h-4 sm:h-6 bg-gray-400" />
                   </motion.button>
