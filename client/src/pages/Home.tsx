@@ -1,29 +1,29 @@
 import { Layout } from "@/components/Layout";
 import { GameCard } from "@/components/GameCard";
-import { Palette, Calculator, BookOpen, Star } from "lucide-react";
+import { Palette, Calculator, BookOpen, Shapes, Music, Clock, Languages, Heart, Star } from "lucide-react";
 
 export default function Home() {
   return (
     <Layout>
       <div className="space-y-8 py-4">
         {/* Welcome Section */}
-        <div className="text-center space-y-4 mb-12">
+        <div className="text-center space-y-4 mb-8">
           <div className="inline-block relative">
-            <h1 className="font-display text-5xl md:text-7xl font-black text-[hsl(var(--macaron-purple-dark))] drop-shadow-sm leading-tight">
-              一起玩 <br className="md:hidden"/> 一起學！
+            <h1 className="font-display text-4xl md:text-6xl font-black text-[hsl(var(--macaron-purple-dark))] drop-shadow-sm leading-tight">
+              一起玩 一起學！
             </h1>
-            <Star className="absolute -top-6 -right-6 w-12 h-12 text-[hsl(var(--macaron-yellow))] fill-current animate-pulse" />
+            <Star className="absolute -top-4 -right-4 w-10 h-10 text-[hsl(var(--macaron-yellow))] fill-current animate-pulse" />
           </div>
-          <p className="text-xl text-muted-foreground font-medium max-w-lg mx-auto">
-            選擇一個遊戲開始你的冒險吧！收集分數成為小超人！
+          <p className="text-lg text-muted-foreground font-medium max-w-lg mx-auto">
+            選擇一個遊戲開始你的冒險吧！收集分數和貼紙成為小超人！
           </p>
         </div>
 
         {/* Game Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           <GameCard
             title="顏色魔法"
-            description="你能配對美麗的顏色嗎？讓我們一起彩繪世界！"
+            description="配對美麗的顏色"
             icon={Palette}
             color="pink"
             href="/game/color"
@@ -31,21 +31,66 @@ export default function Home() {
           />
           
           <GameCard
-            title="數學小天才"
-            description="數蘋果、加星星，成為數字小英雄！"
+            title="數學樂園"
+            description="加減法小英雄"
             icon={Calculator}
             color="blue"
             href="/game/math"
-            delay={0.2}
+            delay={0.15}
           />
           
           <GameCard
-            title="單字探險家"
-            description="把單字和圖案配對起來，學英文超有趣！"
+            title="單字探險"
+            description="學習英文單字"
             icon={BookOpen}
             color="green"
             href="/game/english"
+            delay={0.2}
+          />
+
+          <GameCard
+            title="形狀餅乾店"
+            description="拖曳形狀配對"
+            icon={Shapes}
+            color="yellow"
+            href="/game/shape"
+            delay={0.25}
+          />
+
+          <GameCard
+            title="DoReMi 音樂會"
+            description="跟著旋律彈奏"
+            icon={Music}
+            color="purple"
+            href="/game/melody"
             delay={0.3}
+          />
+
+          <GameCard
+            title="時鐘小管家"
+            description="認識時間"
+            icon={Clock}
+            color="blue"
+            href="/game/clock"
+            delay={0.35}
+          />
+
+          <GameCard
+            title="注音小火車"
+            description="學習ㄅㄆㄇ"
+            icon={Languages}
+            color="green"
+            href="/game/bopomofo"
+            delay={0.4}
+          />
+
+          <GameCard
+            title="心情氣象台"
+            description="認識情緒感受"
+            icon={Heart}
+            color="purple"
+            href="/game/emotion"
+            delay={0.45}
           />
         </div>
       </div>

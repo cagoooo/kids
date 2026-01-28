@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Trophy, Home, Star } from "lucide-react";
+import { Trophy, Home, Star, Sticker } from "lucide-react";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -9,31 +9,39 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex flex-col font-body">
       {/* Playful Header */}
       <header className="p-4 md:p-6">
-        <div className="max-w-4xl mx-auto bg-white/60 backdrop-blur-md rounded-full shadow-lg border-2 border-white px-6 py-3 flex items-center justify-between">
+        <div className="max-w-4xl mx-auto bg-white/60 backdrop-blur-md rounded-full shadow-lg border-2 border-white px-4 md:px-6 py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group cursor-pointer hover:opacity-80 transition-opacity">
             <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-[hsl(var(--macaron-pink))] to-[hsl(var(--macaron-purple))] rounded-full flex items-center justify-center shadow-md group-hover:rotate-12 transition-transform">
               <Star className="text-white w-6 h-6 fill-current" />
             </div>
-            <span className="font-display text-2xl md:text-3xl font-bold text-foreground tracking-tight text-shadow">
+            <span className="font-display text-xl md:text-3xl font-bold text-foreground tracking-tight text-shadow">
               童樂<span className="text-[hsl(var(--macaron-pink-dark))]">學園</span>
             </span>
           </Link>
 
-          <nav className="flex items-center gap-2 md:gap-4">
+          <nav className="flex items-center gap-1 md:gap-3">
             <Link href="/">
               <div 
-                className={`p-3 rounded-full transition-all cursor-pointer ${location === '/' ? 'bg-[hsl(var(--macaron-blue))] text-white shadow-md' : 'hover:bg-gray-100 text-gray-500'}`}
+                className={`p-2 md:p-3 rounded-full transition-all cursor-pointer ${location === '/' ? 'bg-[hsl(var(--macaron-blue))] text-white shadow-md' : 'hover:bg-gray-100 text-gray-500'}`}
                 data-testid="nav-home"
               >
-                <Home className="w-6 h-6" />
+                <Home className="w-5 h-5 md:w-6 md:h-6" />
+              </div>
+            </Link>
+            <Link href="/stickers">
+              <div 
+                className={`p-2 md:p-3 rounded-full transition-all cursor-pointer ${location === '/stickers' ? 'bg-[hsl(var(--macaron-pink))] text-white shadow-md' : 'hover:bg-gray-100 text-gray-500'}`}
+                data-testid="nav-stickers"
+              >
+                <Sticker className="w-5 h-5 md:w-6 md:h-6" />
               </div>
             </Link>
             <Link href="/scores">
               <div 
-                className={`p-3 rounded-full transition-all cursor-pointer ${location === '/scores' ? 'bg-[hsl(var(--macaron-yellow))] text-orange-900 shadow-md' : 'hover:bg-gray-100 text-gray-500'}`}
+                className={`p-2 md:p-3 rounded-full transition-all cursor-pointer ${location === '/scores' ? 'bg-[hsl(var(--macaron-yellow))] text-orange-900 shadow-md' : 'hover:bg-gray-100 text-gray-500'}`}
                 data-testid="nav-scores"
               >
-                <Trophy className="w-6 h-6" />
+                <Trophy className="w-5 h-5 md:w-6 md:h-6" />
               </div>
             </Link>
           </nav>

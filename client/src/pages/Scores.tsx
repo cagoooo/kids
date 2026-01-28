@@ -2,18 +2,25 @@ import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { useScores } from "@/hooks/use-scores";
 import { motion } from "framer-motion";
-import { Palette, Calculator, BookOpen, Trophy } from "lucide-react";
+import { Palette, Calculator, BookOpen, Trophy, Shapes, Music, Clock, Languages, Heart } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
+type GameType = "color" | "math" | "english" | "shape" | "melody" | "clock" | "bopomofo" | "emotion";
+
 export default function Scores() {
-  const [activeTab, setActiveTab] = useState<"color" | "math" | "english">("color");
+  const [activeTab, setActiveTab] = useState<GameType>("color");
   const { data: scores, isLoading } = useScores(activeTab);
 
   const tabs = [
-    { id: "color", label: "顏色", icon: Palette, color: "text-[hsl(var(--macaron-pink-dark))]", bg: "bg-[hsl(var(--macaron-pink))]" },
-    { id: "math", label: "數學", icon: Calculator, color: "text-[hsl(var(--macaron-blue-dark))]", bg: "bg-[hsl(var(--macaron-blue))]" },
-    { id: "english", label: "英文", icon: BookOpen, color: "text-[hsl(var(--macaron-green-dark))]", bg: "bg-[hsl(var(--macaron-green))]" },
-  ] as const;
+    { id: "color" as GameType, label: "顏色", icon: Palette, color: "text-[hsl(var(--macaron-pink-dark))]", bg: "bg-[hsl(var(--macaron-pink))]" },
+    { id: "math" as GameType, label: "數學", icon: Calculator, color: "text-[hsl(var(--macaron-blue-dark))]", bg: "bg-[hsl(var(--macaron-blue))]" },
+    { id: "english" as GameType, label: "英文", icon: BookOpen, color: "text-[hsl(var(--macaron-green-dark))]", bg: "bg-[hsl(var(--macaron-green))]" },
+    { id: "shape" as GameType, label: "形狀", icon: Shapes, color: "text-[hsl(var(--macaron-yellow-dark))]", bg: "bg-[hsl(var(--macaron-yellow))]" },
+    { id: "melody" as GameType, label: "音樂", icon: Music, color: "text-[hsl(var(--macaron-purple-dark))]", bg: "bg-[hsl(var(--macaron-purple))]" },
+    { id: "clock" as GameType, label: "時鐘", icon: Clock, color: "text-[hsl(var(--macaron-blue-dark))]", bg: "bg-[hsl(var(--macaron-blue))]" },
+    { id: "bopomofo" as GameType, label: "注音", icon: Languages, color: "text-[hsl(var(--macaron-green-dark))]", bg: "bg-[hsl(var(--macaron-green))]" },
+    { id: "emotion" as GameType, label: "情緒", icon: Heart, color: "text-[hsl(var(--macaron-purple-dark))]", bg: "bg-[hsl(var(--macaron-purple))]" },
+  ];
 
   return (
     <Layout>
@@ -26,21 +33,21 @@ export default function Scores() {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex justify-center gap-2 md:gap-4 flex-wrap">
+        <div className="flex justify-center gap-2 flex-wrap">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`
-                flex items-center gap-2 px-6 py-3 rounded-full font-bold text-lg transition-all shadow-sm
+                flex items-center gap-1 px-3 md:px-4 py-2 rounded-full font-bold text-sm md:text-base transition-all shadow-sm
                 ${activeTab === tab.id 
                   ? `${tab.bg} ${tab.color} shadow-md scale-105` 
                   : 'bg-white text-gray-500 hover:bg-gray-50'}
               `}
               data-testid={`tab-${tab.id}`}
             >
-              <tab.icon className="w-5 h-5" />
-              {tab.label}
+              <tab.icon className="w-4 h-4" />
+              <span className="hidden md:inline">{tab.label}</span>
             </button>
           ))}
         </div>

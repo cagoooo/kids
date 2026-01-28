@@ -23,7 +23,9 @@ export const api = {
     create: {
       method: 'POST' as const,
       path: '/api/scores',
-      input: insertScoreSchema,
+      input: insertScoreSchema.extend({
+        gameType: z.enum(['color', 'math', 'english', 'shape', 'melody', 'clock', 'bopomofo', 'emotion']),
+      }),
       responses: {
         201: z.custom<typeof scores.$inferSelect>(),
         400: errorSchemas.validation,
