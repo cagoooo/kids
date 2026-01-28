@@ -7,19 +7,19 @@
 :root {
   /* Macaron Palette - Soft Pastels */
   --macaron-pink: 340 100% 85%;
-  --macaron-pink-dark: 340 80% 65%;
+  --macaron-pink-dark: 340 70% 35%;
   
   --macaron-blue: 195 100% 80%;
-  --macaron-blue-dark: 195 80% 60%;
+  --macaron-blue-dark: 195 70% 30%;
   
   --macaron-green: 150 90% 85%;
-  --macaron-green-dark: 150 80% 60%;
+  --macaron-green-dark: 150 60% 28%;
   
   --macaron-yellow: 50 100% 85%;
-  --macaron-yellow-dark: 45 90% 65%;
+  --macaron-yellow-dark: 40 80% 30%;
   
   --macaron-purple: 260 100% 85%;
-  --macaron-purple-dark: 260 80% 65%;
+  --macaron-purple-dark: 260 60% 40%;
 
   /* Base UI Colors */
   --background: 40 50% 98%; /* Warm off-white */

@@ -46,8 +46,8 @@ export function GameCard({ title, description, icon: Icon, color, href, delay = 
           <Icon className="w-8 h-8 md:w-12 md:h-12 stroke-[2.5]" />
         </div>
         <div>
-          <h3 className="font-display text-lg md:text-xl font-bold mb-1 text-shadow leading-tight">{title}</h3>
-          <p className="font-medium opacity-90 text-xs md:text-sm leading-tight hidden md:block">{description}</p>
+          <h3 className="font-display text-lg md:text-xl font-bold mb-1 leading-tight drop-shadow-sm">{title}</h3>
+          <p className="font-semibold text-xs md:text-sm leading-tight hidden md:block drop-shadow-sm">{description}</p>
         </div>
       </motion.div>
     </Link>
