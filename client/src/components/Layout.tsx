@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Trophy, Home, Star, Sticker } from "lucide-react";
+import { Trophy, Home, Star, Sticker, Award } from "lucide-react";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -42,6 +42,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 data-testid="nav-scores"
               >
                 <Trophy className="w-5 h-5 md:w-6 md:h-6" />
+              </div>
+            </Link>
+            <Link href="/certificates">
+              <div 
+                className={`p-2 md:p-3 rounded-full transition-all cursor-pointer ${location === '/certificates' ? 'bg-[hsl(var(--macaron-green))] text-white shadow-md' : 'hover:bg-gray-100 text-gray-500'}`}
+                data-testid="nav-certificates"
+              >
+                <Award className="w-5 h-5 md:w-6 md:h-6" />
               </div>
             </Link>
           </nav>

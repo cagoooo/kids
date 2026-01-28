@@ -15,8 +15,14 @@ import MelodyGame from "@/pages/MelodyGame";
 import ClockGame from "@/pages/ClockGame";
 import BopomofoGame from "@/pages/BopomofoGame";
 import EmotionGame from "@/pages/EmotionGame";
+import CodingGame from "@/pages/CodingGame";
+import GardenGame from "@/pages/GardenGame";
+import MarketGame from "@/pages/MarketGame";
+import RecycleGame from "@/pages/RecycleGame";
+import MemoryGame from "@/pages/MemoryGame";
 import Scores from "@/pages/Scores";
 import Stickers from "@/pages/Stickers";
+import Certificates from "@/pages/Certificates";
 
 function Router() {
   return (
@@ -32,6 +38,12 @@ function Router() {
       <Route path="/game/clock" component={ClockGame} />
       <Route path="/game/bopomofo" component={BopomofoGame} />
       <Route path="/game/emotion" component={EmotionGame} />
+      <Route path="/game/coding" component={CodingGame} />
+      <Route path="/game/garden" component={GardenGame} />
+      <Route path="/game/market" component={MarketGame} />
+      <Route path="/game/recycle" component={RecycleGame} />
+      <Route path="/game/memory" component={MemoryGame} />
+      <Route path="/certificates" component={Certificates} />
       
       {/* Fallback to 404 */}
       <Route component={NotFound} />
