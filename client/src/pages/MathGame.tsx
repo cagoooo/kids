@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Apple } from "lucide-react";
 import { SpeakableOption } from "@/components/SpeakableOption";
+import { generateMathProblem } from "@/utils/math-logic";
 
 export default function MathGame() {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -14,36 +15,22 @@ export default function MathGame() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [shake, setShake] = useState(false);
 
+  // ...
+
   const setupRound = () => {
     if (questionIndex >= 10) {
       setIsGameOver(true);
       return;
     }
 
-    const isAddition = Math.random() > 0.3; // 70% addition, 30% subtraction
-    let a, b, ans;
-
-    if (isAddition) {
-      a = Math.floor(Math.random() * 10) + 1;
-      b = Math.floor(Math.random() * 10) + 1;
-      ans = a + b;
-      setProblem({ a, b, op: '+', ans });
-    } else {
-      a = Math.floor(Math.random() * 10) + 5;
-      b = Math.floor(Math.random() * 5) + 1;
-      ans = a - b;
-      setProblem({ a, b, op: '-', ans });
-    }
-
-    // Generate options
-    const opts = new Set<number>();
-    opts.add(ans);
-    while (opts.size < 4) {
-      const wrong: number = ans + Math.floor(Math.random() * 6) - 3; // Answer +/- 3
-      if (wrong >= 0 && wrong !== ans) opts.add(wrong);
-    }
-    
-    setOptions(Array.from(opts).sort(() => 0.5 - Math.random()));
+    const newProblem = generateMathProblem();
+    setProblem({
+      a: newProblem.a,
+      b: newProblem.b,
+      op: newProblem.op,
+      ans: newProblem.ans
+    });
+    setOptions(newProblem.options);
   };
 
   useEffect(() => {
@@ -81,7 +68,7 @@ export default function MathGame() {
         colorClass="bg-[hsl(var(--macaron-blue))] text-[hsl(var(--macaron-blue-dark))]"
       >
         <div className="flex flex-col items-center gap-4 sm:gap-6 md:gap-8">
-          
+
           {/* Visual Aid for Addition */}
           {problem.op === '+' && problem.a + problem.b <= 10 && (
             <div className="flex gap-4 sm:gap-6 md:gap-8 items-center bg-white/30 p-3 sm:p-4 rounded-2xl md:rounded-3xl">
