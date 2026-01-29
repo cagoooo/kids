@@ -47,6 +47,8 @@ interface GameShellProps {
   children: React.ReactNode;
 }
 
+import { useUser } from "@/hooks/use-user-context";
+
 export function GameShell({
   title,
   score,
@@ -58,7 +60,15 @@ export function GameShell({
   colorClass,
   children
 }: GameShellProps) {
-  const [playerName, setPlayerName] = useState("");
+  const { profile } = useUser();
+  const [playerName, setPlayerName] = useState(profile.name);
+
+  // Update local state if profile changes (e.g. if set in another tab)
+  useEffect(() => {
+    if (profile.name) {
+      setPlayerName(profile.name);
+    }
+  }, [profile.name]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [earnedSticker, setEarnedSticker] = useState<typeof STICKERS[0] | null>(null);

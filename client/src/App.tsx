@@ -90,6 +90,7 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
 }
 
 import { SoundProvider } from "@/hooks/use-sound-context";
+import { UserProvider } from "@/hooks/use-user-context";
 
 function App() {
   return (
@@ -97,9 +98,11 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <SoundProvider>
-          <AuthWrapper>
-            <Router />
-          </AuthWrapper>
+          <UserProvider>
+            <AuthWrapper>
+              <Router />
+            </AuthWrapper>
+          </UserProvider>
         </SoundProvider>
       </TooltipProvider>
     </QueryClientProvider>

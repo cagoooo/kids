@@ -1,5 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { GameCard } from "@/components/GameCard";
+import { ProfileCard } from "@/components/ProfileCard";
 import { Palette, Calculator, BookOpen, Shapes, Music, Clock, Languages, Heart, Star, Code, Flower2, ShoppingCart, Recycle, Brain, Cat, Car, User, Apple, Briefcase, Puzzle, Search, ListOrdered, FolderOpen } from "lucide-react";
 
 export default function Home() {
@@ -19,6 +20,8 @@ export default function Home() {
           </p>
         </div>
 
+        <ProfileCard />
+
         {/* Game Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           <GameCard
@@ -29,7 +32,7 @@ export default function Home() {
             href="/game/color"
             delay={0.1}
           />
-          
+
           <GameCard
             title="數學樂園"
             description="加減法小英雄"
@@ -38,7 +41,7 @@ export default function Home() {
             href="/game/math"
             delay={0.15}
           />
-          
+
           <GameCard
             title="單字探險"
             description="學習英文單字"
