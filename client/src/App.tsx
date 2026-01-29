@@ -34,34 +34,37 @@ import Stickers from "@/pages/Stickers";
 import Certificates from "@/pages/Certificates";
 
 function Router() {
+  // Use the base path from Vite config in production
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
   return (
     <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/scores" component={Scores} />
-      <Route path="/stickers" component={Stickers} />
-      <Route path="/game/color" component={ColorGame} />
-      <Route path="/game/math" component={MathGame} />
-      <Route path="/game/english" component={EnglishGame} />
-      <Route path="/game/shape" component={ShapeGame} />
-      <Route path="/game/melody" component={MelodyGame} />
-      <Route path="/game/clock" component={ClockGame} />
-      <Route path="/game/bopomofo" component={BopomofoGame} />
-      <Route path="/game/emotion" component={EmotionGame} />
-      <Route path="/game/coding" component={CodingGame} />
-      <Route path="/game/garden" component={GardenGame} />
-      <Route path="/game/market" component={MarketGame} />
-      <Route path="/game/recycle" component={RecycleGame} />
-      <Route path="/game/memory" component={MemoryGame} />
-      <Route path="/game/animal" component={AnimalGame} />
-      <Route path="/game/traffic" component={TrafficGame} />
-      <Route path="/game/body" component={BodyGame} />
-      <Route path="/game/food" component={FoodGame} />
-      <Route path="/game/job" component={JobGame} />
-      <Route path="/game/puzzle" component={PuzzleGame} />
-      <Route path="/game/difference" component={DifferenceGame} />
-      <Route path="/game/sequence" component={SequenceGame} />
-      <Route path="/game/sorting" component={SortingGame} />
-      <Route path="/certificates" component={Certificates} />
+      <Route path={base + "/"} component={Home} />
+      <Route path={base + "/scores"} component={Scores} />
+      <Route path={base + "/stickers"} component={Stickers} />
+      <Route path={base + "/game/color"} component={ColorGame} />
+      <Route path={base + "/game/math"} component={MathGame} />
+      <Route path={base + "/game/english"} component={EnglishGame} />
+      <Route path={base + "/game/shape"} component={ShapeGame} />
+      <Route path={base + "/game/melody"} component={MelodyGame} />
+      <Route path={base + "/game/clock"} component={ClockGame} />
+      <Route path={base + "/game/bopomofo"} component={BopomofoGame} />
+      <Route path={base + "/game/emotion"} component={EmotionGame} />
+      <Route path={base + "/game/coding"} component={CodingGame} />
+      <Route path={base + "/game/garden"} component={GardenGame} />
+      <Route path={base + "/game/market"} component={MarketGame} />
+      <Route path={base + "/game/recycle"} component={RecycleGame} />
+      <Route path={base + "/game/memory"} component={MemoryGame} />
+      <Route path={base + "/game/animal"} component={AnimalGame} />
+      <Route path={base + "/game/traffic"} component={TrafficGame} />
+      <Route path={base + "/game/body"} component={BodyGame} />
+      <Route path={base + "/game/food"} component={FoodGame} />
+      <Route path={base + "/game/job"} component={JobGame} />
+      <Route path={base + "/game/puzzle"} component={PuzzleGame} />
+      <Route path={base + "/game/difference"} component={DifferenceGame} />
+      <Route path={base + "/game/sequence"} component={SequenceGame} />
+      <Route path={base + "/game/sorting"} component={SortingGame} />
+      <Route path={base + "/certificates"} component={Certificates} />
 
       {/* Fallback to 404 */}
       <Route component={NotFound} />
