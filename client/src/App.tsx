@@ -89,14 +89,18 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+import { SoundProvider } from "@/hooks/use-sound-context";
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <AuthWrapper>
-          <Router />
-        </AuthWrapper>
+        <SoundProvider>
+          <AuthWrapper>
+            <Router />
+          </AuthWrapper>
+        </SoundProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
