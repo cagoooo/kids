@@ -34,6 +34,7 @@ const SortingGame = lazy(() => import("@/pages/SortingGame"));
 const Scores = lazy(() => import("@/pages/Scores"));
 const Stickers = lazy(() => import("@/pages/Stickers"));
 const Certificates = lazy(() => import("@/pages/Certificates"));
+const DailyChallenge = lazy(() => import("@/pages/DailyChallenge"));
 
 function Router() {
   // Use the base path from Vite config in production
@@ -49,6 +50,7 @@ function Router() {
         <Route path={base + "/"} component={Home} />
         <Route path={base + "/scores"} component={Scores} />
         <Route path={base + "/stickers"} component={Stickers} />
+        <Route path={base + "/daily"} component={DailyChallenge} />
         <Route path={base + "/game/color"} component={ColorGame} />
         <Route path={base + "/game/math"} component={MathGame} />
         <Route path={base + "/game/english"} component={EnglishGame} />
@@ -100,6 +102,8 @@ import { SoundProvider } from "@/hooks/use-sound-context";
 import { UserProvider } from "@/hooks/use-user-context";
 import { StickerProvider } from "@/hooks/use-sticker-context";
 
+import { DailyChallengeProvider } from "@/hooks/use-daily-challenge";
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -108,9 +112,11 @@ function App() {
         <SoundProvider>
           <UserProvider>
             <StickerProvider>
-              <AuthWrapper>
-                <Router />
-              </AuthWrapper>
+              <DailyChallengeProvider>
+                <AuthWrapper>
+                  <Router />
+                </AuthWrapper>
+              </DailyChallengeProvider>
             </StickerProvider>
           </UserProvider>
         </SoundProvider>
