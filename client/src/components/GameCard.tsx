@@ -14,7 +14,8 @@ interface GameCardProps {
 
 export function GameCard({ title, description, icon: Icon, color, href, delay = 0 }: GameCardProps) {
   const { speak } = useTTS();
-  
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
   const colorClasses = {
     pink: "bg-[hsl(var(--macaron-pink))] text-[hsl(var(--macaron-pink-dark))]",
     blue: "bg-[hsl(var(--macaron-blue))] text-[hsl(var(--macaron-blue-dark))]",
@@ -24,7 +25,7 @@ export function GameCard({ title, description, icon: Icon, color, href, delay = 
   };
 
   return (
-    <Link href={href}>
+    <Link href={base + href}>
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
