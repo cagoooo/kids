@@ -62,11 +62,28 @@ function Router() {
       <Route path="/game/sequence" component={SequenceGame} />
       <Route path="/game/sorting" component={SortingGame} />
       <Route path="/certificates" component={Certificates} />
-      
+
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
   );
+}
+
+import { useAuth } from "@/hooks/use-auth";
+import { Loader2 } from "lucide-react";
+
+function AuthWrapper({ children }: { children: React.ReactNode }) {
+  const { loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[hsl(var(--macaron-yellow))]">
+        <Loader2 className="w-12 h-12 animate-spin text-[hsl(var(--macaron-purple-dark))]" />
+      </div>
+    );
+  }
+
+  return <>{children}</>;
 }
 
 function App() {
@@ -74,7 +91,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router />
+        <AuthWrapper>
+          <Router />
+        </AuthWrapper>
       </TooltipProvider>
     </QueryClientProvider>
   );

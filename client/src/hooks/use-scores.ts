@@ -1,15 +1,24 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, buildUrl, type InsertScore } from "@shared/routes";
-import { z } from "zod";
+import { db } from "@/lib/firebase";
+import { collection, query, where, orderBy, limit, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { insertScoreSchema, type InsertScore, type Score } from "@/lib/types";
 
 export function useScores(gameType: string) {
   return useQuery({
-    queryKey: [api.scores.list.path, gameType],
+    queryKey: ["scores", gameType],
     queryFn: async () => {
-      const url = buildUrl(api.scores.list.path, { gameType });
-      const res = await fetch(url, { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch scores");
-      return api.scores.list.responses[200].parse(await res.json());
+      const q = query(
+        collection(db, "scores"),
+        where("gameType", "==", gameType),
+        orderBy("score", "desc"),
+        limit(10)
+      );
+
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Score[];
     },
   });
 }
@@ -18,25 +27,16 @@ export function useAddScore() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: InsertScore) => {
-      const validated = api.scores.create.input.parse(data);
-      const res = await fetch(api.scores.create.path, {
-        method: api.scores.create.method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(validated),
-        credentials: "include",
+      const validated = insertScoreSchema.parse(data);
+      const docRef = await addDoc(collection(db, "scores"), {
+        ...validated,
+        createdAt: serverTimestamp(),
       });
-      if (!res.ok) {
-        if (res.status === 400) {
-          const error = api.scores.create.responses[400].parse(await res.json());
-          throw new Error(error.message);
-        }
-        throw new Error('Failed to submit score');
-      }
-      return api.scores.create.responses[201].parse(await res.json());
+      return { id: docRef.id, ...validated };
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ 
-        queryKey: [api.scores.list.path, variables.gameType] 
+      queryClient.invalidateQueries({
+        queryKey: ["scores", variables.gameType]
       });
     },
   });
