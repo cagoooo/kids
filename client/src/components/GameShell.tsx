@@ -33,7 +33,7 @@ const STICKERS = [
 
 const STICKER_STORAGE_KEY = "kidszone_stickers";
 
-type GameType = "color" | "math" | "english" | "shape" | "melody" | "clock" | "bopomofo" | "emotion" | "coding" | "garden" | "market" | "recycle" | "memory";
+type GameType = "color" | "math" | "english" | "shape" | "melody" | "clock" | "bopomofo" | "emotion" | "coding" | "garden" | "market" | "recycle" | "memory" | "animal" | "traffic" | "body" | "food" | "job" | "puzzle" | "difference" | "sequence" | "sorting";
 
 interface GameShellProps {
   title: string;

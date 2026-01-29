@@ -1,6 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { GameCard } from "@/components/GameCard";
-import { Palette, Calculator, BookOpen, Shapes, Music, Clock, Languages, Heart, Star, Code, Flower2, ShoppingCart, Recycle, Brain } from "lucide-react";
+import { Palette, Calculator, BookOpen, Shapes, Music, Clock, Languages, Heart, Star, Code, Flower2, ShoppingCart, Recycle, Brain, Cat, Car, User, Apple, Briefcase, Puzzle, Search, ListOrdered, FolderOpen } from "lucide-react";
 
 export default function Home() {
   return (
@@ -136,6 +136,87 @@ export default function Home() {
             color="purple"
             href="/game/memory"
             delay={0.7}
+          />
+
+          <GameCard
+            title="動物王國"
+            description="認識動物朋友"
+            icon={Cat}
+            color="yellow"
+            href="/game/animal"
+            delay={0.75}
+          />
+
+          <GameCard
+            title="交通小達人"
+            description="交通工具與規則"
+            icon={Car}
+            color="blue"
+            href="/game/traffic"
+            delay={0.8}
+          />
+
+          <GameCard
+            title="我的身體"
+            description="認識身體部位"
+            icon={User}
+            color="pink"
+            href="/game/body"
+            delay={0.85}
+          />
+
+          <GameCard
+            title="蔬果大集合"
+            description="認識水果蔬菜"
+            icon={Apple}
+            color="green"
+            href="/game/food"
+            delay={0.9}
+          />
+
+          <GameCard
+            title="職業大冒險"
+            description="認識各種職業"
+            icon={Briefcase}
+            color="purple"
+            href="/game/job"
+            delay={0.95}
+          />
+
+          <GameCard
+            title="拼圖挑戰"
+            description="拖拉完成拼圖"
+            icon={Puzzle}
+            color="yellow"
+            href="/game/puzzle"
+            delay={1.0}
+          />
+
+          <GameCard
+            title="找找看"
+            description="找出不一樣的"
+            icon={Search}
+            color="blue"
+            href="/game/difference"
+            delay={1.05}
+          />
+
+          <GameCard
+            title="順序排列"
+            description="排出正確順序"
+            icon={ListOrdered}
+            color="green"
+            href="/game/sequence"
+            delay={1.1}
+          />
+
+          <GameCard
+            title="分類小幫手"
+            description="把物品分類"
+            icon={FolderOpen}
+            color="purple"
+            href="/game/sorting"
+            delay={1.15}
           />
         </div>
       </div>

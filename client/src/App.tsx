@@ -20,6 +20,15 @@ import GardenGame from "@/pages/GardenGame";
 import MarketGame from "@/pages/MarketGame";
 import RecycleGame from "@/pages/RecycleGame";
 import MemoryGame from "@/pages/MemoryGame";
+import AnimalGame from "@/pages/AnimalGame";
+import TrafficGame from "@/pages/TrafficGame";
+import BodyGame from "@/pages/BodyGame";
+import FoodGame from "@/pages/FoodGame";
+import JobGame from "@/pages/JobGame";
+import PuzzleGame from "@/pages/PuzzleGame";
+import DifferenceGame from "@/pages/DifferenceGame";
+import SequenceGame from "@/pages/SequenceGame";
+import SortingGame from "@/pages/SortingGame";
 import Scores from "@/pages/Scores";
 import Stickers from "@/pages/Stickers";
 import Certificates from "@/pages/Certificates";
@@ -43,6 +52,15 @@ function Router() {
       <Route path="/game/market" component={MarketGame} />
       <Route path="/game/recycle" component={RecycleGame} />
       <Route path="/game/memory" component={MemoryGame} />
+      <Route path="/game/animal" component={AnimalGame} />
+      <Route path="/game/traffic" component={TrafficGame} />
+      <Route path="/game/body" component={BodyGame} />
+      <Route path="/game/food" component={FoodGame} />
+      <Route path="/game/job" component={JobGame} />
+      <Route path="/game/puzzle" component={PuzzleGame} />
+      <Route path="/game/difference" component={DifferenceGame} />
+      <Route path="/game/sequence" component={SequenceGame} />
+      <Route path="/game/sorting" component={SortingGame} />
       <Route path="/certificates" component={Certificates} />
       
       {/* Fallback to 404 */}
