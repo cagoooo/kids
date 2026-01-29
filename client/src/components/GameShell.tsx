@@ -67,24 +67,24 @@ export function GameShell({
   const awardSticker = () => {
     const saved = localStorage.getItem(STICKER_STORAGE_KEY);
     const collected: number[] = saved ? JSON.parse(saved) : [];
-    
+
     const uncollected = STICKERS.filter(s => !collected.includes(s.id));
-    
+
     if (uncollected.length === 0) {
       const randomSticker = STICKERS[Math.floor(Math.random() * STICKERS.length)];
       setEarnedSticker(randomSticker);
       return;
     }
-    
+
     const weights = uncollected.map(s => {
       if (s.rarity === "傳說") return 1;
       if (s.rarity === "稀有") return 3;
       return 10;
     });
-    
+
     const totalWeight = weights.reduce((a, b) => a + b, 0);
     let random = Math.random() * totalWeight;
-    
+
     let selectedSticker = uncollected[0];
     for (let i = 0; i < uncollected.length; i++) {
       random -= weights[i];
@@ -93,7 +93,7 @@ export function GameShell({
         break;
       }
     }
-    
+
     collected.push(selectedSticker.id);
     localStorage.setItem(STICKER_STORAGE_KEY, JSON.stringify(collected));
     setEarnedSticker(selectedSticker);
@@ -107,11 +107,11 @@ export function GameShell({
         origin: { y: 0.6 },
         colors: ['#FFC0CB', '#87CEEB', '#98FB98', '#DDA0DD', '#F0E68C']
       });
-      
+
       if (score >= 50) {
         awardSticker();
       }
-      
+
       const timer = setTimeout(() => setShowSaveDialog(true), 1500);
       return () => clearTimeout(timer);
     }
@@ -152,6 +152,8 @@ export function GameShell({
     setEarnedSticker(null);
   };
 
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
   return (
     <div className={`min-h-[80vh] flex flex-col ${colorClass} rounded-[2rem] md:rounded-[3rem] p-4 md:p-8 shadow-xl relative overflow-hidden border-4 md:border-8 border-white`}>
       {/* Background Decor */}
@@ -161,24 +163,23 @@ export function GameShell({
 
       {/* Game Header */}
       <div className="flex justify-between items-center mb-6 md:mb-8 relative z-10">
-        <Link href="/">
-          <button 
+        <Link href={base + "/"}>
+          <button
             className="bg-white/40 hover:bg-white/60 p-2 md:p-3 rounded-xl md:rounded-2xl transition-all hover:scale-105 active:scale-95 text-inherit"
             data-testid="button-back"
           >
             <ArrowLeft className="w-6 h-6 md:w-8 md:h-8 stroke-[3]" />
           </button>
         </Link>
-        
+
         <div className="flex flex-col items-center">
           <h2 className="font-display text-xl md:text-3xl font-bold text-shadow">{title}</h2>
           <div className="flex gap-1 mt-1">
             {Array.from({ length: totalQuestions }).map((_, i) => (
-              <div 
-                key={i} 
-                className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-colors duration-300 ${
-                  i < currentQuestionIndex ? "bg-white" : "bg-black/10"
-                }`} 
+              <div
+                key={i}
+                className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-colors duration-300 ${i < currentQuestionIndex ? "bg-white" : "bg-black/10"
+                  }`}
               />
             ))}
           </div>
@@ -209,7 +210,7 @@ export function GameShell({
                 <div className="text-6xl md:text-8xl font-black text-white text-shadow-lg mb-4">
                   {savedScore !== null ? savedScore : score}
                 </div>
-                
+
                 {earnedSticker && (
                   <motion.div
                     initial={{ scale: 0, rotate: -180 }}
@@ -231,8 +232,8 @@ export function GameShell({
                     分數已儲存！
                   </div>
                 )}
-                
-                <button 
+
+                <button
                   onClick={handlePlayAgain}
                   className="w-full bg-white text-current font-bold py-3 md:py-4 rounded-2xl text-lg md:text-xl shadow-lg hover:scale-105 transition-transform"
                   data-testid="button-play-again"
@@ -257,7 +258,7 @@ export function GameShell({
             <div className="text-center text-lg text-muted-foreground">
               你得了 <span className="font-bold text-[hsl(var(--macaron-purple))] text-2xl">{score}</span> 分！
             </div>
-            
+
             {earnedSticker && (
               <motion.div
                 initial={{ scale: 0 }}
@@ -272,7 +273,7 @@ export function GameShell({
                 </div>
               </motion.div>
             )}
-            
+
             <div className="space-y-2">
               <label className="text-sm font-bold ml-1">你的名字</label>
               <Input
