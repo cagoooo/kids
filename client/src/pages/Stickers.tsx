@@ -1,59 +1,106 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Star, Lock } from "lucide-react";
+import { Star, Lock, Move } from "lucide-react";
+import { useSticker, STICKERS } from "@/hooks/use-sticker-context";
+import { DndContext, useDraggable, useDroppable, DragEndEvent } from "@dnd-kit/core";
 
-const STICKERS = [
-  { id: 1, emoji: "🦄", name: "獨角獸", rarity: "稀有" },
-  { id: 2, emoji: "🐱", name: "小貓咪", rarity: "普通" },
-  { id: 3, emoji: "🐶", name: "小狗狗", rarity: "普通" },
-  { id: 4, emoji: "🐰", name: "小兔子", rarity: "普通" },
-  { id: 5, emoji: "🦋", name: "蝴蝶", rarity: "稀有" },
-  { id: 6, emoji: "🌈", name: "彩虹", rarity: "稀有" },
-  { id: 7, emoji: "⭐", name: "星星", rarity: "普通" },
-  { id: 8, emoji: "🌸", name: "櫻花", rarity: "普通" },
-  { id: 9, emoji: "🍰", name: "蛋糕", rarity: "普通" },
-  { id: 10, emoji: "🍭", name: "棒棒糖", rarity: "普通" },
-  { id: 11, emoji: "🎀", name: "蝴蝶結", rarity: "普通" },
-  { id: 12, emoji: "🎈", name: "氣球", rarity: "普通" },
-  { id: 13, emoji: "🦊", name: "小狐狸", rarity: "稀有" },
-  { id: 14, emoji: "🐼", name: "熊貓", rarity: "稀有" },
-  { id: 15, emoji: "🦁", name: "獅子", rarity: "稀有" },
-  { id: 16, emoji: "🐧", name: "企鵝", rarity: "普通" },
-  { id: 17, emoji: "🦀", name: "螃蟹", rarity: "普通" },
-  { id: 18, emoji: "🐳", name: "鯨魚", rarity: "稀有" },
-  { id: 19, emoji: "🌟", name: "閃亮星", rarity: "傳說" },
-  { id: 20, emoji: "👑", name: "皇冠", rarity: "傳說" },
-];
+function DraggableSticker({ id, emoji, name, x, y }: { id: number, emoji: string, name: string, x: number, y: number }) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: `sticker-${id}`,
+  });
 
-const STICKER_STORAGE_KEY = "kidszone_stickers";
+  const style = transform ? {
+    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+  } : undefined;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        ...style
+      }}
+      {...listeners}
+      {...attributes}
+      className="cursor-move select-none flex flex-col items-center group z-10"
+    >
+      <div className="text-5xl sm:text-6xl drop-shadow-md transition-transform group-hover:scale-110 active:scale-125">
+        {emoji}
+      </div>
+      <span className="bg-white/80 px-2 py-0.5 rounded-full text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        {name}
+      </span>
+    </div>
+  );
+}
+
+function StickerCanvas() {
+  const { collectedStickers, stickerPositions, updateStickerPosition } = useSticker();
+  const { setNodeRef } = useDroppable({ id: 'canvas' });
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, delta } = event;
+    const stickerId = parseInt(active.id.toString().replace('sticker-', ''));
+
+    const currentPos = stickerPositions[stickerId] || { x: 50, y: 50 };
+
+    updateStickerPosition(
+      stickerId,
+      Math.max(0, Math.min(currentPos.x + delta.x, window.innerWidth - 100)), // Simple bounds
+      Math.max(0, Math.min(currentPos.y + delta.y, 500))
+    );
+  };
+
+  return (
+    <DndContext onDragEnd={handleDragEnd}>
+      <div
+        ref={setNodeRef}
+        className="w-full h-[600px] bg-white/40 backdrop-blur-sm rounded-[2rem] border-4 border-white/60 shadow-inner relative overflow-hidden"
+      >
+        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
+
+        <div className="absolute top-4 right-4 text-muted-foreground/50 flex items-center gap-2 pointer-events-none">
+          <Move className="w-5 h-5" />
+          <span className="text-sm font-bold">拖拉貼紙來佈置！</span>
+        </div>
+
+        {collectedStickers.map(id => {
+          const sticker = STICKERS.find(s => s.id === id);
+          if (!sticker) return null;
+
+          // Default random position if not set
+          const pos = stickerPositions[id] || {
+            x: Math.random() * 200 + 50,
+            y: Math.random() * 200 + 50
+          };
+
+          return (
+            <DraggableSticker
+              key={id}
+              id={id}
+              emoji={sticker.emoji}
+              name={sticker.name}
+              x={pos.x}
+              y={pos.y}
+            />
+          );
+        })}
+
+        {collectedStickers.length === 0 && (
+          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/50 font-bold text-xl">
+            還沒有貼紙喔，快去玩遊戲收集！
+          </div>
+        )}
+      </div>
+    </DndContext>
+  );
+}
 
 export default function Stickers() {
-  const [collectedStickers, setCollectedStickers] = useState<number[]>([]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(STICKER_STORAGE_KEY);
-    if (saved) {
-      setCollectedStickers(JSON.parse(saved));
-    }
-  }, []);
-
-  const getRarityColor = (rarity: string) => {
-    switch (rarity) {
-      case "傳說": return "from-yellow-300 to-orange-400";
-      case "稀有": return "from-purple-300 to-pink-400";
-      default: return "from-blue-200 to-green-200";
-    }
-  };
-
-  const getRarityBorder = (rarity: string) => {
-    switch (rarity) {
-      case "傳說": return "border-yellow-400 ring-2 ring-yellow-300";
-      case "稀有": return "border-purple-300";
-      default: return "border-white";
-    }
-  };
-
+  const { collectedStickers } = useSticker();
   const collectedCount = collectedStickers.length;
   const totalCount = STICKERS.length;
 
@@ -63,12 +110,12 @@ export default function Stickers() {
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[hsl(var(--macaron-purple-dark))]">
-            貼紙收集冊
+            我的貼紙簿
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground font-medium">
-            玩遊戲收集可愛的馬卡龍貼紙！
+            拖拉貼紙，打造你的專屬樂園！
           </p>
-          
+
           {/* Progress */}
           <div className="bg-white/60 backdrop-blur-md rounded-full px-4 sm:px-6 py-2 sm:py-3 inline-flex items-center gap-2 sm:gap-3 shadow-md">
             <Star className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 fill-yellow-400" />
@@ -79,62 +126,30 @@ export default function Stickers() {
           </div>
         </div>
 
-        {/* Sticker Grid */}
-        <div className="bg-white/60 backdrop-blur-md rounded-xl sm:rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-xl border-2 sm:border-4 border-white">
-          <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
-            {STICKERS.map((sticker, index) => {
+        {/* Canvas */}
+        <StickerCanvas />
+
+        {/* Collection Grid (Reference) */}
+        <div className="mt-8">
+          <h3 className="text-xl font-bold text-[hsl(var(--macaron-purple-dark))] mb-4 px-2">
+            圖鑑一覽
+          </h3>
+          <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-2 sm:gap-3">
+            {STICKERS.map((sticker) => {
               const isCollected = collectedStickers.includes(sticker.id);
-              
               return (
-                <motion.div
+                <div
                   key={sticker.id}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
                   className={`
-                    aspect-square rounded-xl sm:rounded-2xl flex flex-col items-center justify-center gap-0.5 sm:gap-1
-                    border-2 sm:border-4 transition-all relative overflow-hidden
-                    ${isCollected 
-                      ? `bg-gradient-to-br ${getRarityColor(sticker.rarity)} ${getRarityBorder(sticker.rarity)} shadow-lg` 
-                      : 'bg-gray-100 border-gray-200'}
+                    aspect-square rounded-xl flex items-center justify-center text-2xl sm:text-3xl
+                    ${isCollected ? 'bg-white shadow-sm' : 'bg-gray-100 opacity-50 grayscale'}
                   `}
-                  data-testid={`sticker-${sticker.id}`}
+                  title={sticker.name}
                 >
-                  {isCollected ? (
-                    <>
-                      <span className="text-2xl sm:text-3xl md:text-5xl">{sticker.emoji}</span>
-                      <span className="text-[10px] sm:text-xs font-bold text-white/80 hidden sm:block">
-                        {sticker.name}
-                      </span>
-                      {sticker.rarity === "傳說" && (
-                        <div className="absolute inset-0 bg-gradient-to-t from-yellow-400/20 to-transparent pointer-events-none animate-pulse" />
-                      )}
-                    </>
-                  ) : (
-                    <div className="flex flex-col items-center text-gray-300">
-                      <Lock className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
-                      <span className="text-[10px] sm:text-xs mt-0.5 sm:mt-1">???</span>
-                    </div>
-                  )}
-                </motion.div>
+                  {isCollected ? sticker.emoji : <Lock className="w-5 h-5" />}
+                </div>
               );
             })}
-          </div>
-        </div>
-
-        {/* Legend */}
-        <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
-          <div className="flex items-center gap-1.5 sm:gap-2 bg-white/60 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
-            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-gradient-to-br from-blue-200 to-green-200" />
-            <span className="text-xs sm:text-sm font-medium">普通</span>
-          </div>
-          <div className="flex items-center gap-1.5 sm:gap-2 bg-white/60 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
-            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-gradient-to-br from-purple-300 to-pink-400" />
-            <span className="text-xs sm:text-sm font-medium">稀有</span>
-          </div>
-          <div className="flex items-center gap-1.5 sm:gap-2 bg-white/60 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
-            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-gradient-to-br from-yellow-300 to-orange-400" />
-            <span className="text-xs sm:text-sm font-medium">傳說</span>
           </div>
         </div>
       </div>

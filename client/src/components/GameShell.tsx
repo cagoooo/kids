@@ -47,7 +47,7 @@ interface GameShellProps {
   children: React.ReactNode;
 }
 
-import { useUser } from "@/hooks/use-user-context";
+import { useSticker } from "@/hooks/use-sticker-context";
 
 export function GameShell({
   title,
@@ -61,53 +61,21 @@ export function GameShell({
   children
 }: GameShellProps) {
   const { profile } = useUser();
+  const { updateStats, checkAchievements } = useSticker();
   const [playerName, setPlayerName] = useState(profile.name);
 
-  // Update local state if profile changes (e.g. if set in another tab)
+  // Update local state if profile changes
   useEffect(() => {
     if (profile.name) {
       setPlayerName(profile.name);
     }
   }, [profile.name]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
-  const [earnedSticker, setEarnedSticker] = useState<typeof STICKERS[0] | null>(null);
+  // We'll use the sticker type from our context now, but for UI compatibility we might need to map it or import STICKERS from context
+  const [earnedSticker, setEarnedSticker] = useState<any>(null);
   const addScore = useAddScore();
-
-  const awardSticker = () => {
-    const saved = localStorage.getItem(STICKER_STORAGE_KEY);
-    const collected: number[] = saved ? JSON.parse(saved) : [];
-
-    const uncollected = STICKERS.filter(s => !collected.includes(s.id));
-
-    if (uncollected.length === 0) {
-      const randomSticker = STICKERS[Math.floor(Math.random() * STICKERS.length)];
-      setEarnedSticker(randomSticker);
-      return;
-    }
-
-    const weights = uncollected.map(s => {
-      if (s.rarity === "傳說") return 1;
-      if (s.rarity === "稀有") return 3;
-      return 10;
-    });
-
-    const totalWeight = weights.reduce((a, b) => a + b, 0);
-    let random = Math.random() * totalWeight;
-
-    let selectedSticker = uncollected[0];
-    for (let i = 0; i < uncollected.length; i++) {
-      random -= weights[i];
-      if (random <= 0) {
-        selectedSticker = uncollected[i];
-        break;
-      }
-    }
-
-    collected.push(selectedSticker.id);
-    localStorage.setItem(STICKER_STORAGE_KEY, JSON.stringify(collected));
-    setEarnedSticker(selectedSticker);
-  };
 
   useEffect(() => {
     if (isGameOver) {
@@ -118,12 +86,17 @@ export function GameShell({
         colors: ['#FFC0CB', '#87CEEB', '#98FB98', '#DDA0DD', '#F0E68C']
       });
 
-      if (score >= 50) {
-        awardSticker();
-      }
+      // Update stats and check for achievements
+      updateStats(score);
 
-      const timer = setTimeout(() => setShowSaveDialog(true), 1500);
-      return () => clearTimeout(timer);
+      // Small delay to allow stats to update before checking (though state updates are batched, this is safer for visual flow)
+      setTimeout(() => {
+        const newSticker = checkAchievements();
+        if (newSticker) {
+          setEarnedSticker(newSticker);
+        }
+        setShowSaveDialog(true);
+      }, 1000);
     }
   }, [isGameOver]);
 
