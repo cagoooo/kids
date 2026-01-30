@@ -38,6 +38,7 @@ const Certificates = lazy(() => import("@/pages/Certificates"));
 const DailyChallenge = lazy(() => import("@/pages/DailyChallenge"));
 const DrawingGame = lazy(() => import("@/pages/DrawingGame"));
 const MoleGame = lazy(() => import("@/pages/MoleGame"));
+const Shop = lazy(() => import("@/pages/Shop"));
 
 function Router() {
   // Use the base path from Vite config in production
@@ -54,6 +55,7 @@ function Router() {
         <Route path={base + "/scores"} component={Scores} />
         <Route path={base + "/stickers"} component={Stickers} />
         <Route path={base + "/daily"} component={DailyChallenge} />
+        <Route path={base + "/shop"} component={Shop} />
         <Route path={base + "/game/color"} component={ColorGame} />
         <Route path={base + "/game/math"} component={MathGame} />
         <Route path={base + "/game/english"} component={EnglishGame} />

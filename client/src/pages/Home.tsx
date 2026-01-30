@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { Layout } from "@/components/Layout";
 import { GameCard } from "@/components/GameCard";
 import { ProfileCard } from "@/components/ProfileCard";
-import { Palette, Calculator, BookOpen, Shapes, Music, Clock, Languages, Heart, Star, Code, Flower2, ShoppingCart, Recycle, Brain, Cat, Car, User, Apple, Briefcase, Puzzle, Search, ListOrdered, FolderOpen, Calendar, Sparkles, School, Gavel, Flame, CheckCircle2 } from "lucide-react";
+import { Palette, Calculator, BookOpen, Shapes, Music, Clock, Languages, Heart, Star, Code, Flower2, ShoppingCart, Recycle, Brain, Cat, Car, User, Apple, Briefcase, Puzzle, Search, ListOrdered, FolderOpen, Calendar, Sparkles, School, Gavel, Flame, CheckCircle2, Gift } from "lucide-react";
 
 import { useDailyStreak } from "@/hooks/use-daily-streak";
 import { useSound } from "@/hooks/use-sound-context";
@@ -10,9 +10,12 @@ import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 
+import { useUser } from "@/hooks/use-user-context";
+
 export default function Home() {
   const { playHover, playClick, playCorrect } = useSound();
   const { streak, checkedInToday, handleCheckIn, showCelebration } = useDailyStreak();
+  const { profile } = useUser();
 
   // Trigger confetti when celebration is shown
   useEffect(() => {
@@ -32,6 +35,10 @@ export default function Home() {
       <div className="space-y-8 py-4">
         {/* Welcome Header */}
         <section className="text-center space-y-4 pt-4 md:pt-8 relative">
+          <div className="absolute top-0 right-0 md:top-4 md:right-4 bg-yellow-400 text-yellow-900 px-4 py-2 rounded-2xl font-black text-xl shadow-lg border-2 border-white flex items-center gap-2 transform rotate-2 hover:rotate-0 transition-transform">
+            <Star className="w-6 h-6 fill-white text-white" />
+            <span>{profile.coins}</span>
+          </div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -108,27 +115,44 @@ export default function Home() {
           </motion.div>
         </section>
 
-        {/* Daily Challenge Banner */}
-        <Link href={import.meta.env.BASE_URL.replace(/\/$/, "") + "/daily"}>
-          <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-1 shadow-lg mb-8 cursor-pointer transform hover:scale-[1.02] transition-transform">
-            <div className="bg-white/90 backdrop-blur-sm rounded-[1.3rem] p-4 flex items-center gap-4">
-              <div className="bg-yellow-400 p-3 rounded-full text-white animate-bounce">
-                <Sparkles className="w-8 h-8 fill-current" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600">
-                  每日挑戰
-                </h3>
-                <p className="text-sm font-bold text-gray-500">
-                  完成今天的 5 個任務，獲得神秘獎勵！
-                </p>
-              </div>
-              <div className="bg-gray-100 p-2 rounded-xl">
-                <Calendar className="w-6 h-6 text-gray-400" />
+        {/* Daily Challenge & Shop Banner Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <Link href={import.meta.env.BASE_URL.replace(/\/$/, "") + "/daily"}>
+            <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-1 shadow-lg cursor-pointer transform hover:scale-[1.02] transition-transform h-full">
+              <div className="bg-white/90 backdrop-blur-sm rounded-[1.3rem] p-4 flex items-center gap-4 h-full">
+                <div className="bg-yellow-400 p-3 rounded-full text-white animate-bounce">
+                  <Sparkles className="w-8 h-8 fill-current" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600">
+                    每日挑戰
+                  </h3>
+                  <p className="text-sm font-bold text-gray-500">
+                    完成任務賺獎勵！
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+
+          <Link href={import.meta.env.BASE_URL.replace(/\/$/, "") + "/shop"}>
+            <div className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 rounded-3xl p-1 shadow-lg cursor-pointer transform hover:scale-[1.02] transition-transform h-full">
+              <div className="bg-white/90 backdrop-blur-sm rounded-[1.3rem] p-4 flex items-center gap-4 h-full">
+                <div className="bg-purple-500 p-3 rounded-full text-white">
+                  <Gift className="w-8 h-8" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 to-red-600">
+                    快樂商店
+                  </h3>
+                  <p className="text-sm font-bold text-gray-500">
+                    用金幣換禮物！
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
 
         <ProfileCard />
 

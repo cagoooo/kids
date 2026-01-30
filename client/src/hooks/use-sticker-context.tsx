@@ -56,6 +56,7 @@ interface StickerContextType {
     collectedStickers: number[];
     stickerPositions: Record<number, StickerPosition>;
     userStats: UserStats;
+    STICKERS: Sticker[];
     unlockSticker: (id: number) => void;
     updateStickerPosition: (id: number, x: number, y: number) => void;
     updateStats: (score: number) => void;
@@ -159,6 +160,7 @@ export function StickerProvider({ children }: { children: React.ReactNode }) {
             collectedStickers,
             stickerPositions,
             userStats,
+            STICKERS,
             unlockSticker,
             updateStickerPosition,
             updateStats,

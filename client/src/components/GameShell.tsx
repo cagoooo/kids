@@ -34,7 +34,7 @@ const STICKERS = [
 
 const STICKER_STORAGE_KEY = "kidszone_stickers";
 
-type GameType = "color" | "math" | "english" | "shape" | "melody" | "clock" | "bopomofo" | "emotion" | "coding" | "garden" | "market" | "recycle" | "memory" | "animal" | "traffic" | "body" | "food" | "job" | "puzzle" | "difference" | "sequence" | "sorting" | "drawing";
+type GameType = "color" | "math" | "english" | "shape" | "melody" | "clock" | "bopomofo" | "emotion" | "coding" | "garden" | "market" | "recycle" | "memory" | "animal" | "traffic" | "body" | "food" | "job" | "puzzle" | "difference" | "sequence" | "sorting" | "drawing" | "mole";
 
 interface GameShellProps {
   title: string;
@@ -61,9 +61,10 @@ export function GameShell({
   colorClass,
   children
 }: GameShellProps) {
-  const { profile } = useUser();
+  const { profile, addCoins } = useUser();
   const { updateStats, checkAchievements } = useSticker();
   const [playerName, setPlayerName] = useState(profile.name);
+  const [earnedCoins, setEarnedCoins] = useState(0);
 
   // Update local state if profile changes
   useEffect(() => {
@@ -86,6 +87,15 @@ export function GameShell({
         origin: { y: 0.6 },
         colors: ['#FFC0CB', '#87CEEB', '#98FB98', '#DDA0DD', '#F0E68C']
       });
+
+      // Award Coins
+      const coins = Math.floor(score / 10);
+      if (coins > 0) {
+        setEarnedCoins(coins);
+        addCoins(coins);
+      } else {
+        setEarnedCoins(0);
+      }
 
       // Update stats and check for achievements
       updateStats(score);
@@ -208,6 +218,18 @@ export function GameShell({
                     </div>
                     <div className="text-6xl">{earnedSticker.emoji}</div>
                     <div className="text-sm font-medium mt-1">{earnedSticker.name}</div>
+                  </motion.div>
+                )}
+
+                {earnedCoins > 0 && (
+                  <motion.div
+                    initial={{ scale: 0, y: 20 }}
+                    animate={{ scale: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="flex items-center gap-2 bg-yellow-400 text-yellow-900 px-6 py-2 rounded-full font-black text-xl mb-4 shadow-lg border-2 border-white"
+                  >
+                    <Star className="w-6 h-6 fill-white text-white" />
+                    <span>+{earnedCoins} 金幣</span>
                   </motion.div>
                 )}
 

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import useSound from 'use-sound';
+import { useUser } from './use-user-context';
 
 // Keys for localStorage
 const STREAK_KEY = 'kids-zone-streak';
 const LAST_LOGIN_KEY = 'kids-zone-last-login';
 
 export function useDailyStreak() {
+    const { addCoins } = useUser();
     const [streak, setStreak] = useState(0);
     const [checkedInToday, setCheckedInToday] = useState(false);
     const [showCelebration, setShowCelebration] = useState(false);
@@ -59,6 +61,7 @@ export function useDailyStreak() {
         setStreak(newStreak);
         setCheckedInToday(true);
         setShowCelebration(true);
+        addCoins(10); // Award 10 coins
 
         localStorage.setItem(STREAK_KEY, newStreak.toString());
         localStorage.setItem(LAST_LOGIN_KEY, today);
