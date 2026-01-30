@@ -61,6 +61,10 @@ export function useTTS() {
       }
 
       utterance.onerror = (e) => {
+        // Ignore interrupted errors as they are expected when user clicks quickly
+        if (e.error === 'interrupted' || e.error === 'canceled') {
+          return;
+        }
         console.error('Speech synthesis error:', e);
       };
 

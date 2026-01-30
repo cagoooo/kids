@@ -1,24 +1,32 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { db } from "@/lib/firebase";
-import { collection, query, where, orderBy, limit, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
 import { insertScoreSchema, type InsertScore, type Score } from "@/lib/types";
+
+// Helper to simulate network delay for better UX
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// LocalStorage key
+const SCORES_STORAGE_KEY = "kidszone_scores";
 
 export function useScores(gameType: string) {
   return useQuery({
     queryKey: ["scores", gameType],
     queryFn: async () => {
-      const q = query(
-        collection(db, "scores"),
-        where("gameType", "==", gameType),
-        orderBy("score", "desc"),
-        limit(10)
-      );
+      // Simulate network request
+      await delay(500);
 
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Score[];
+      try {
+        const stored = localStorage.getItem(SCORES_STORAGE_KEY);
+        const allScores: Score[] = stored ? JSON.parse(stored) : [];
+
+        // Filter by gameType and sort by score desc
+        return allScores
+          .filter(s => s.gameType === gameType)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 10);
+      } catch (e) {
+        console.error("Failed to fetch scores from localStorage", e);
+        return [];
+      }
     },
   });
 }
@@ -28,11 +36,26 @@ export function useAddScore() {
   return useMutation({
     mutationFn: async (data: InsertScore) => {
       const validated = insertScoreSchema.parse(data);
-      const docRef = await addDoc(collection(db, "scores"), {
+      await delay(800); // Simulate network delay
+
+      const newScore: Score = {
+        id: Math.random().toString(36).slice(2),
         ...validated,
-        createdAt: serverTimestamp(),
-      });
-      return { id: docRef.id, ...validated };
+        createdAt: new Date(), // LocalStorage stores strings, but we'll cast it back on read if needed (though UI handles dates loosely usually)
+      };
+
+      try {
+        const stored = localStorage.getItem(SCORES_STORAGE_KEY);
+        const allScores: Score[] = stored ? JSON.parse(stored) : [];
+
+        allScores.push(newScore);
+        localStorage.setItem(SCORES_STORAGE_KEY, JSON.stringify(allScores));
+
+        return newScore;
+      } catch (e) {
+        console.error("Failed to save score to localStorage", e);
+        throw e;
+      }
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
