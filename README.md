@@ -1,5 +1,13 @@
 # KidsZone Learning Games (童樂學園)
 
+## v1.0.1 更新日誌 (2026/01/30)
+- ✅ **手機體驗優化**：修復白屏問題，加入 Error Boundary 防護。
+- ✅ **離線模式支援**：分數系統改用 LocalStorage，支援 GitHub Pages 靜態部署與離線遊玩。
+- ✅ **PWA 升級**：更新應用程式圖示，修復 Manifest 警告。
+- ✅ **錯誤修復**：過濾 TTS 語音干擾錯誤，提升穩定性。
+- ✅ **開發體驗**：修復本地開發 Firebase API Key 與 WebSocket 連線問題。
+
+
 這是一個使用 React 和 Express 構建的兒童教育遊戲平台，包含 13 個繁體中文互動學習遊戲。
 
 ## 🎮 遊戲內容
