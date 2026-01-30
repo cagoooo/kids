@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { Layout } from "@/components/Layout";
 import { GameCard } from "@/components/GameCard";
 import { ProfileCard } from "@/components/ProfileCard";
-import { Palette, Calculator, BookOpen, Shapes, Music, Clock, Languages, Heart, Star, Code, Flower2, ShoppingCart, Recycle, Brain, Cat, Car, User, Apple, Briefcase, Puzzle, Search, ListOrdered, FolderOpen, Calendar, Sparkles } from "lucide-react";
+import { Palette, Calculator, BookOpen, Shapes, Music, Clock, Languages, Heart, Star, Code, Flower2, ShoppingCart, Recycle, Brain, Cat, Car, User, Apple, Briefcase, Puzzle, Search, ListOrdered, FolderOpen, Calendar, Sparkles, School, Gavel } from "lucide-react";
 
 export default function Home() {
   return (
@@ -242,6 +242,26 @@ export default function Home() {
               color="purple"
               href="/game/sorting"
               delay={1.15}
+            />
+
+
+
+            <GameCard
+              title="創意畫畫板"
+              description="發揮創意畫一畫"
+              icon={Palette}
+              color="pink"
+              href="/game/drawing"
+              delay={1.25}
+            />
+
+            <GameCard
+              title="打地鼠挑戰"
+              description="反應力大考驗"
+              icon={Gavel}
+              color="yellow"
+              href="/game/mole"
+              delay={1.3}
             />
           </div>
         </div>

@@ -4,6 +4,7 @@ interface SoundContextType {
     isMuted: boolean;
     toggleMute: () => void;
     playClick: () => void;
+    playHover: () => void;
     playCorrect: () => void;
     playWrong: () => void;
 }
@@ -82,6 +83,11 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
     const playClick = () => playTone("sine", 440, 0.1);
 
+    const playHover = () => {
+        if (isMuted) return;
+        playTone("sine", 880, 0.05); // Higher pitch, shorter duration for hover
+    };
+
     const playCorrect = () => {
         if (isMuted) return;
         playTone("sine", 523.25, 0.3, 659.25); // C5 -> E5 sequence simulated poorly here, but good enough for now
@@ -90,7 +96,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     const playWrong = () => playTone("sawtooth", 200, 0.3);
 
     return (
-        <SoundContext.Provider value={{ isMuted, toggleMute, playClick, playCorrect, playWrong }}>
+        <SoundContext.Provider value={{ isMuted, toggleMute, playClick, playHover, playCorrect, playWrong }}>
             {children}
         </SoundContext.Provider>
     );

@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { LucideIcon } from "lucide-react";
 import { useTTS } from "@/hooks/use-tts";
+import { useSound } from "@/hooks/use-sound-context";
 
 interface GameCardProps {
   title: string;
@@ -14,6 +15,7 @@ interface GameCardProps {
 
 export function GameCard({ title, description, icon: Icon, color, href, delay = 0 }: GameCardProps) {
   const { speak } = useTTS();
+  const { playHover, playClick } = useSound();
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   const colorClasses = {
@@ -24,16 +26,20 @@ export function GameCard({ title, description, icon: Icon, color, href, delay = 
     purple: "bg-[hsl(var(--macaron-purple))] text-[hsl(var(--macaron-purple-dark))]",
   };
 
-  return (
-    <Link href={base + href}>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay, type: "spring", stiffness: 200, damping: 15 }}
-        whileHover={{ scale: 1.05, rotate: 1 }}
-        whileTap={{ scale: 0.95 }}
-        onMouseEnter={() => speak(title)}
-        className={`
+  const isExternal = href.startsWith('http');
+  const CardContent = (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, type: "spring", stiffness: 200, damping: 15 }}
+      whileHover={{ scale: 1.05, rotate: 1 }}
+      whileTap={{ scale: 0.95 }}
+      onMouseEnter={() => {
+        speak(title);
+        playHover();
+      }}
+      onClick={() => playClick()}
+      className={`
           relative cursor-pointer rounded-2xl md:rounded-3xl p-4 md:p-6
           shadow-lg hover:shadow-xl transition-all duration-300
           border-4 border-white/50 backdrop-blur-sm
@@ -41,16 +47,29 @@ export function GameCard({ title, description, icon: Icon, color, href, delay = 
           flex flex-col items-center text-center gap-2 md:gap-3
           aspect-square justify-center
         `}
-        data-testid={`game-card-${href.split('/').pop()}`}
-      >
-        <div className="bg-white/30 p-3 md:p-4 rounded-full backdrop-blur-md shadow-inner">
-          <Icon className="w-8 h-8 md:w-12 md:h-12 stroke-[2.5]" />
-        </div>
-        <div>
-          <h3 className="font-display text-lg md:text-xl font-bold mb-1 leading-tight drop-shadow-sm">{title}</h3>
-          <p className="font-semibold text-xs md:text-sm leading-tight hidden md:block drop-shadow-sm">{description}</p>
-        </div>
-      </motion.div>
+      data-testid={`game-card-${href.split('/').pop()}`}
+    >
+      <div className="bg-white/30 p-3 md:p-4 rounded-full backdrop-blur-md shadow-inner">
+        <Icon className="w-8 h-8 md:w-12 md:h-12 stroke-[2.5]" />
+      </div>
+      <div>
+        <h3 className="font-display text-lg md:text-xl font-bold mb-1 leading-tight drop-shadow-sm">{title}</h3>
+        <p className="font-semibold text-xs md:text-sm leading-tight hidden md:block drop-shadow-sm">{description}</p>
+      </div>
+    </motion.div>
+  );
+
+  if (isExternal) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className="no-underline">
+        {CardContent}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={base + href}>
+      {CardContent}
     </Link>
   );
 }

@@ -58,13 +58,19 @@ function StickerCanvas() {
     <DndContext onDragEnd={handleDragEnd}>
       <div
         ref={setNodeRef}
-        className="w-full h-[600px] bg-white/40 backdrop-blur-sm rounded-[2rem] border-4 border-white/60 shadow-inner relative overflow-hidden"
+        className="w-full h-[600px] bg-white rounded-[1.5rem] relative overflow-hidden cursor-crosshair group"
+        style={{
+          backgroundImage: 'radial-gradient(#e0e0e0 1px, transparent 1px), linear-gradient(to bottom, transparent 19px, #d4f1f9 20px)',
+          backgroundSize: '20px 20px, 100% 20px'
+        }}
       >
-        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
+        <div className="absolute top-4 left-4 text-blue-300 font-bold text-xl opacity-30 pointer-events-none select-none">
+          Sticker Book
+        </div>
 
-        <div className="absolute top-4 right-4 text-muted-foreground/50 flex items-center gap-2 pointer-events-none">
-          <Move className="w-5 h-5" />
-          <span className="text-sm font-bold">拖拉貼紙來佈置！</span>
+        <div className="absolute top-4 right-4 text-gray-400 bg-white/80 px-3 py-1 rounded-full shadow-sm flex items-center gap-2 pointer-events-none border border-gray-100">
+          <Move className="w-4 h-4 animate-pulse" />
+          <span className="text-xs font-bold">按住貼紙可以移動位置喔！</span>
         </div>
 
         {collectedStickers.map(id => {
@@ -106,50 +112,100 @@ export default function Stickers() {
 
   return (
     <Layout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[hsl(var(--macaron-purple-dark))]">
-            我的貼紙簿
-          </h1>
-          <p className="text-sm sm:text-base text-muted-foreground font-medium">
-            拖拉貼紙，打造你的專屬樂園！
-          </p>
+      <div className="space-y-6 md:space-y-8 max-w-6xl mx-auto">
+        {/* Header Section with Bouncing Title */}
+        <div className="text-center space-y-4 py-6 bg-white/50 backdrop-blur-sm rounded-[3rem] shadow-sm border-2 border-white/50">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="inline-block"
+          >
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-400 drop-shadow-sm tracking-tight mb-2">
+              我的貼紙簿
+            </h1>
+          </motion.div>
 
-          {/* Progress */}
-          <div className="bg-white/60 backdrop-blur-md rounded-full px-4 sm:px-6 py-2 sm:py-3 inline-flex items-center gap-2 sm:gap-3 shadow-md">
-            <Star className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 fill-yellow-400" />
-            <span className="font-display font-bold text-lg sm:text-xl">
-              {collectedCount} / {totalCount}
-            </span>
-            <span className="text-sm sm:text-base text-muted-foreground">已收集</span>
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-lg text-gray-600 font-bold bg-white/80 px-6 py-1 rounded-full shadow-sm">
+              即將充滿魔法的專屬樂園！✨
+            </p>
+
+            {/* Progress Bar Container */}
+            <div className="relative w-64 h-8 bg-gray-200 rounded-full overflow-hidden border-4 border-white shadow-inner">
+              <motion.div
+                className="h-full bg-gradient-to-r from-yellow-300 to-orange-400"
+                initial={{ width: 0 }}
+                animate={{ width: `${(collectedCount / totalCount) * 100}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center text-xs font-black text-white drop-shadow-md">
+                {collectedCount} / {totalCount}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Canvas */}
-        <StickerCanvas />
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          {/* Main Canvas - The "Playmat" */}
+          <div className="lg:col-span-8 order-2 lg:order-1">
+            <div className="bg-[#fff9c4] p-4 rounded-[2.5rem] shadow-2xl border-8 border-[#fdd835] relative transform -rotate-1">
+              {/* Ring Binder Holes decorations */}
+              <div className="absolute -left-4 top-1/4 w-8 h-8 rounded-full bg-gray-300 border-2 border-gray-400 shadow-inner z-10"></div>
+              <div className="absolute -left-4 top-2/4 w-8 h-8 rounded-full bg-gray-300 border-2 border-gray-400 shadow-inner z-10"></div>
+              <div className="absolute -left-4 top-3/4 w-8 h-8 rounded-full bg-gray-300 border-2 border-gray-400 shadow-inner z-10"></div>
 
-        {/* Collection Grid (Reference) */}
-        <div className="mt-8">
-          <h3 className="text-xl font-bold text-[hsl(var(--macaron-purple-dark))] mb-4 px-2">
-            圖鑑一覽
-          </h3>
-          <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-2 sm:gap-3">
-            {STICKERS.map((sticker) => {
-              const isCollected = collectedStickers.includes(sticker.id);
-              return (
-                <div
-                  key={sticker.id}
-                  className={`
-                    aspect-square rounded-xl flex items-center justify-center text-2xl sm:text-3xl
-                    ${isCollected ? 'bg-white shadow-sm' : 'bg-gray-100 opacity-50 grayscale'}
-                  `}
-                  title={sticker.name}
-                >
-                  {isCollected ? sticker.emoji : <Lock className="w-5 h-5" />}
-                </div>
-              );
-            })}
+              <div className="bg-white rounded-[2rem] overflow-hidden shadow-inner min-h-[600px] relative border-4 border-dashed border-yellow-200">
+                <StickerCanvas />
+              </div>
+            </div>
+          </div>
+
+          {/* Sticker Collection - The "Sticker Sheet" */}
+          <div className="lg:col-span-4 order-1 lg:order-2">
+            <div className="bg-white/80 backdrop-blur-md rounded-[2rem] p-6 shadow-xl border-4 border-purple-100 flex flex-col h-full">
+              <h3 className="text-2xl font-black text-purple-600 mb-4 flex items-center gap-2">
+                <Star className="fill-yellow-400 text-yellow-500" />
+                貼紙圖鑑
+              </h3>
+
+              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-3 overflow-y-auto max-h-[600px] pr-2 custom-scrollbar">
+                {STICKERS.map((sticker) => {
+                  const isCollected = collectedStickers.includes(sticker.id);
+                  return (
+                    <motion.div
+                      key={sticker.id}
+                      whileHover={{ scale: 1.05, rotate: isCollected ? [0, -5, 5, 0] : 0 }}
+                      className={`
+                                        aspect-square rounded-2xl flex flex-col items-center justify-center p-2 border-b-4 transition-all relative overflow-hidden group
+                                        ${isCollected
+                          ? 'bg-gradient-to-br from-white to-blue-50 border-blue-200 shadow-md cursor-grab active:cursor-grabbing'
+                          : 'bg-gray-100 border-gray-200 inner-shadow opacity-60'}
+                                    `}
+                      title={sticker.name}
+                    >
+                      {isCollected ? (
+                        <>
+                          <div className="text-4xl filter drop-shadow-sm transform transition-transform group-hover:scale-110">
+                            {sticker.emoji}
+                          </div>
+                          <span className="text-[10px] font-bold text-gray-500 mt-1 bg-white/50 px-2 rounded-full">
+                            {sticker.name}
+                          </span>
+                          {/* Sparkle effect */}
+                          <div className="absolute top-1 right-1 w-2 h-2 bg-yellow-300 rounded-full animate-ping opacity-75" />
+                        </>
+                      ) : (
+                        <Lock className="w-6 h-6 text-gray-300" />
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-4 p-4 bg-purple-50 rounded-xl text-xs text-purple-600 font-bold text-center">
+                💡 小提示：玩遊戲獲得高分就能解鎖更多貼紙喔！
+              </div>
+            </div>
           </div>
         </div>
       </div>

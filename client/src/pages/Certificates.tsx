@@ -225,52 +225,68 @@ export default function Certificates() {
           </p>
         </div>
 
-        {/* Achievements Grid */}
-        <div className="bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-xl border-4 border-white">
-          <h2 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-center mb-4 sm:mb-6">
-            成就徽章
+        {/* Achievements Shelf */}
+        <div className="bg-[#5d4037] p-6 sm:p-8 rounded-[2rem] shadow-2xl border-b-8 border-[#3e2723] relative overflow-hidden">
+          {/* Wood texture overlay */}
+          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] mix-blend-overlay pointer-events-none" />
+
+          <h2 className="font-display text-2xl sm:text-3xl font-black text-center mb-8 text-[#ffecb3] drop-shadow-md flex items-center justify-center gap-3">
+            <Trophy className="text-yellow-400 fill-current animate-bounce" />
+            榮譽展示櫃
+            <Trophy className="text-yellow-400 fill-current animate-bounce delay-100" />
           </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 relative z-10">
             {ACHIEVEMENTS.map((achievement) => {
               const isUnlocked = unlockedAchievements.includes(achievement.id);
               const Icon = achievement.icon;
 
               return (
-                <motion.button
-                  key={achievement.id}
-                  whileHover={{ scale: isUnlocked ? 1.05 : 1 }}
-                  whileTap={{ scale: isUnlocked ? 0.95 : 1 }}
-                  onClick={() => {
-                    if (isUnlocked) {
-                      setSelectedAchievement(achievement);
-                      speak(achievement.title);
-                    } else {
-                      speak("還沒解鎖喔！繼續加油！");
-                    }
-                  }}
-                  className={`
-                    p-3 sm:p-4 rounded-xl sm:rounded-2xl flex flex-col items-center gap-2 transition-all
-                    ${isUnlocked
-                      ? `${achievement.bgColor} shadow-lg cursor-pointer ring-2 ring-white`
-                      : 'bg-gray-200 cursor-not-allowed opacity-60'}
-                    ${selectedAchievement?.id === achievement.id ? 'ring-4 ring-yellow-400' : ''}
-                  `}
-                  data-testid={`achievement-${achievement.id}`}
-                >
-                  <div className={`
-                    w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center
-                    ${isUnlocked ? 'bg-white shadow-md' : 'bg-gray-300'}
-                  `}>
-                    {isUnlocked ? (
-                      <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${achievement.color}`} />
-                    ) : (
-                      <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
+                <div key={achievement.id} className="flex flex-col items-center group relative">
+                  {/* The "Shelf" under each item */}
+                  <div className="absolute bottom-[-10px] w-full h-4 bg-[#795548] rounded-full shadow-lg z-0" />
+
+                  <motion.button
+                    whileHover={{ scale: isUnlocked ? 1.1 : 1, y: -10 }}
+                    whileTap={{ scale: isUnlocked ? 0.95 : 1 }}
+                    onClick={() => {
+                      if (isUnlocked) {
+                        setSelectedAchievement(achievement);
+                        speak(achievement.title);
+                      } else {
+                        speak("還沒解鎖喔！繼續加油！");
+                      }
+                    }}
+                    className={`
+                        relative z-10 w-full aspect-square flex flex-col items-center justify-center p-2 transition-all duration-500
+                        ${isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed grayscale opacity-70'}
+                      `}
+                    data-testid={`achievement-${achievement.id}`}
+                  >
+                    {/* Trophy/Medal Glow */}
+                    {isUnlocked && (
+                      <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-xl animate-pulse" />
                     )}
-                  </div>
-                  <span className="text-xs sm:text-sm font-bold text-center">{achievement.title}</span>
-                  <span className="text-xs text-gray-500 text-center hidden sm:block">{achievement.description}</span>
-                </motion.button>
+
+                    <div className={`
+                        w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center border-4 shadow-xl transform transition-transform
+                        ${isUnlocked
+                        ? `bg-gradient-to-br from-white to-${achievement.bgColor.replace('bg-', '')} border-white ring-4 ring-yellow-300/50`
+                        : 'bg-gray-200 border-gray-300'}
+                      `}>
+                      {isUnlocked ? (
+                        <Icon className={`w-10 h-10 sm:w-12 sm:h-12 ${achievement.color} drop-shadow-md`} />
+                      ) : (
+                        <Lock className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
+                      )}
+                    </div>
+
+                    {/* Name Plate */}
+                    <div className="mt-4 bg-[#ffecb3] text-[#5d4037] px-3 py-1 rounded-md shadow-md border-b-2 border-[#ffca28] min-w-[100px] text-center">
+                      <span className="text-xs sm:text-sm font-black block">{achievement.title}</span>
+                    </div>
+                  </motion.button>
+                </div>
               );
             })}
           </div>
