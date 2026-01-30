@@ -66,25 +66,42 @@ export default function Certificates() {
   const certificateRef = useRef<HTMLDivElement>(null);
   const { speak } = useTTS();
 
-  const { data: scores } = useQuery<{ id: number; playerName: string; gameType: string; score: number }[]>({
-    queryKey: ["/api/scores"],
-  });
+  // Fetch scores from localStorage to check for high scores
+  const [scores, setScores] = useState<{ id: string; playerName: string; gameType: string; score: number }[]>([]);
 
   useEffect(() => {
+    // Load scores from localStorage
+    try {
+      const storedScores = localStorage.getItem("kidszone_scores");
+      if (storedScores) {
+        setScores(JSON.parse(storedScores));
+      }
+    } catch (e) {
+      console.error("Failed to load scores from localStorage", e);
+    }
+
     const savedAchievements = localStorage.getItem(ACHIEVEMENTS_STORAGE_KEY);
     if (savedAchievements) {
       setUnlockedAchievements(JSON.parse(savedAchievements));
     }
-    
-    checkAndUnlockAchievements();
+
+    // We need to call checkAndUnlockAchievements here, but since setScores is async, 
+    // it's better to rely on useEffect dependency on 'scores' if we were using it, 
+    // or just call it after setting. However, standard pattern is to use an effect dependent on scores.
+  }, []); // Run once on mount
+
+  useEffect(() => {
+    if (scores.length > 0) {
+      checkAndUnlockAchievements();
+    }
   }, [scores]);
 
   const checkAndUnlockAchievements = () => {
     const savedStickers = localStorage.getItem(STICKER_STORAGE_KEY);
     const stickerCount = savedStickers ? JSON.parse(savedStickers).length : 0;
-    
+
     const newUnlocked: string[] = [];
-    
+
     ACHIEVEMENTS.forEach((achievement) => {
       if (achievement.requirement.type === "stickers") {
         if (stickerCount >= achievement.requirement.value) {
@@ -213,12 +230,12 @@ export default function Certificates() {
           <h2 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-center mb-4 sm:mb-6">
             成就徽章
           </h2>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {ACHIEVEMENTS.map((achievement) => {
               const isUnlocked = unlockedAchievements.includes(achievement.id);
               const Icon = achievement.icon;
-              
+
               return (
                 <motion.button
                   key={achievement.id}
@@ -234,8 +251,8 @@ export default function Certificates() {
                   }}
                   className={`
                     p-3 sm:p-4 rounded-xl sm:rounded-2xl flex flex-col items-center gap-2 transition-all
-                    ${isUnlocked 
-                      ? `${achievement.bgColor} shadow-lg cursor-pointer ring-2 ring-white` 
+                    ${isUnlocked
+                      ? `${achievement.bgColor} shadow-lg cursor-pointer ring-2 ring-white`
                       : 'bg-gray-200 cursor-not-allowed opacity-60'}
                     ${selectedAchievement?.id === achievement.id ? 'ring-4 ring-yellow-400' : ''}
                   `}
@@ -271,7 +288,7 @@ export default function Certificates() {
           </h2>
 
           {/* Certificate Preview */}
-          <div 
+          <div
             ref={certificateRef}
             className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 border-4 border-dashed border-yellow-300 text-center"
           >
