@@ -4,6 +4,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 
@@ -114,7 +115,9 @@ function App() {
             <StickerProvider>
               <DailyChallengeProvider>
                 <AuthWrapper>
-                  <Router />
+                  <ErrorBoundary>
+                    <Router />
+                  </ErrorBoundary>
                 </AuthWrapper>
               </DailyChallengeProvider>
             </StickerProvider>

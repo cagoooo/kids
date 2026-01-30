@@ -4,9 +4,9 @@ let cachedVoice: SpeechSynthesisVoice | null = null;
 
 function findBestChineseVoice(): SpeechSynthesisVoice | null {
   if (!('speechSynthesis' in window)) return null;
-  
+
   const voices = window.speechSynthesis.getVoices();
-  
+
   const preferredVoices = [
     (v: SpeechSynthesisVoice) => v.lang === 'zh-TW' && v.name.includes('Mei-Jia'),
     (v: SpeechSynthesisVoice) => v.lang === 'zh-TW' && v.name.includes('Ting-Ting'),
@@ -36,25 +36,38 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
 
 export function useTTS() {
   const speak = useCallback((text: string) => {
-    if (!('speechSynthesis' in window)) return;
-
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-TW';
-    utterance.rate = 0.85;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-
-    if (!cachedVoice) {
-      cachedVoice = findBestChineseVoice();
-    }
-    
-    if (cachedVoice) {
-      utterance.voice = cachedVoice;
+    // Safety check just to be sure
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      console.warn('Speech synthesis not supported');
+      return;
     }
 
-    window.speechSynthesis.speak(utterance);
+    try {
+      // Some browsers might throw on cancel
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'zh-TW';
+      utterance.rate = 0.85;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+
+      if (!cachedVoice) {
+        cachedVoice = findBestChineseVoice();
+      }
+
+      if (cachedVoice) {
+        utterance.voice = cachedVoice;
+      }
+
+      utterance.onerror = (e) => {
+        console.error('Speech synthesis error:', e);
+      };
+
+      window.speechSynthesis.speak(utterance);
+    } catch (err) {
+      console.error('Speech synthesis failed:', err);
+    }
   }, []);
 
   return { speak };
