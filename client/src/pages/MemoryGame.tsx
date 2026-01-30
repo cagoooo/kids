@@ -4,29 +4,20 @@ import { GameShell } from "@/components/GameShell";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { useTTS } from "@/hooks/use-tts";
+import { MEMORY_LEVELS, CardType } from "@/data/memory-levels";
+import { Star } from "lucide-react";
 
 interface Card {
   id: number;
-  emoji: string;
-  name: string;
+  pairId: string;
+  content: string;
+  type: CardType;
   isFlipped: boolean;
   isMatched: boolean;
 }
 
-const CARD_PAIRS = [
-  { emoji: "🐰", name: "兔子" },
-  { emoji: "🐻", name: "熊" },
-  { emoji: "🦊", name: "狐狸" },
-  { emoji: "🐼", name: "熊貓" },
-  { emoji: "🐨", name: "無尾熊" },
-  { emoji: "🦁", name: "獅子" },
-  { emoji: "🐯", name: "老虎" },
-  { emoji: "🐸", name: "青蛙" },
-];
-
 export default function MemoryGame() {
-  const [round, setRound] = useState(0);
-  const [score, setScore] = useState(0);
+  const [level, setLevel] = useState(1);
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [isChecking, setIsChecking] = useState(false);
@@ -35,174 +26,228 @@ export default function MemoryGame() {
   const [isGameOver, setIsGameOver] = useState(false);
   const { speak } = useTTS();
 
+  const currentLevelConfig = MEMORY_LEVELS.find(l => l.id === level) || MEMORY_LEVELS[0];
+
   const initializeCards = () => {
-    const pairCount = round < 3 ? 6 : 8;
+    // Determine pair count based on level difficulty or fixed size
+    // For now, let's keep it consistent: 6 pairs for easy game flow, or 8 for harder?
+    // Let's use 6 pairs for Level 1, 8 pairs for Levels 2 & 3
+    const pairCount = level === 1 ? 6 : 8;
     setTotalPairs(pairCount);
-    
-    const selectedPairs = [...CARD_PAIRS]
+
+    // Select random pairs from the level config
+    const availablePairs = [...currentLevelConfig.pairs]
       .sort(() => 0.5 - Math.random())
       .slice(0, pairCount);
-    
-    const cardDeck = selectedPairs.flatMap((pair, idx) => [
-      { id: idx * 2, ...pair, isFlipped: false, isMatched: false },
-      { id: idx * 2 + 1, ...pair, isFlipped: false, isMatched: false },
-    ]);
-    
+
+    // Create deck
+    const cardDeck: Card[] = availablePairs.flatMap((pair, idx) => {
+      // Ensure we take both items from the pair
+      const item1 = pair.items[0];
+      const item2 = pair.items[1];
+
+      return [
+        {
+          id: idx * 2,
+          pairId: pair.pairId,
+          content: item1.content,
+          type: item1.type,
+          isFlipped: false,
+          isMatched: false
+        },
+        {
+          id: idx * 2 + 1,
+          pairId: pair.pairId,
+          content: item2.content,
+          type: item2.type,
+          isFlipped: false,
+          isMatched: false
+        },
+      ];
+    });
+
     return cardDeck.sort(() => 0.5 - Math.random());
   };
 
   useEffect(() => {
-    if (round >= 5) {
-      setIsGameOver(true);
-      return;
-    }
+    startLevel();
+  }, [level]);
+
+  const startLevel = () => {
+    setIsGameOver(false);
     setCards(initializeCards());
     setFlippedCards([]);
     setMatchedPairs(0);
     setIsChecking(false);
-    speak("翻開卡片，找到一樣的動物！");
-  }, [round]);
+    speak(`第${level}關，${currentLevelConfig.name}！${currentLevelConfig.description}`);
+  };
 
   const handleCardClick = (cardId: number) => {
     if (isChecking) return;
-    
+
     const card = cards.find(c => c.id === cardId);
     if (!card || card.isFlipped || card.isMatched) return;
-    
+
+    // Play sound
+    // playClick(); // Assumed handled or added if needed
+
+    // Flip card
     const newFlipped = [...flippedCards, cardId];
     setFlippedCards(newFlipped);
-    
-    setCards(cards.map(c => 
+
+    setCards(cards.map(c =>
       c.id === cardId ? { ...c, isFlipped: true } : c
     ));
-    
-    speak(card.name);
-    
+
+    // Speak content if it's not too long (arithmetic might be weird but OK)
+    // Replace symbols for better speech if needed
+    let speakText = card.content;
+    if (speakText.includes("+")) speakText = speakText.replace("+", "加");
+    if (speakText.includes("-")) speakText = speakText.replace("-", "減");
+    speak(speakText);
+
     if (newFlipped.length === 2) {
       setIsChecking(true);
-      
-      const [first, second] = newFlipped;
-      const firstCard = cards.find(c => c.id === first)!;
-      const secondCard = cards.find(c => c.id === second)!;
-      
+
+      const [firstId, secondId] = newFlipped;
+      const firstCard = cards.find(c => c.id === firstId)!;
+      const secondCard = cards.find(c => c.id === secondId)!;
+
       setTimeout(() => {
-        if (firstCard.emoji === secondCard.emoji) {
+        if (firstCard.pairId === secondCard.pairId) {
+          // MATCH!
           confetti({ particleCount: 30, spread: 40, origin: { y: 0.6 } });
-          speak("配對成功！");
-          
-          setCards(prev => prev.map(c => 
-            c.id === first || c.id === second 
-              ? { ...c, isMatched: true } 
+          speak("答對了！");
+
+          setCards(prev => prev.map(c =>
+            c.id === firstId || c.id === secondId
+              ? { ...c, isMatched: true }
               : c
           ));
-          
+
           const newMatchedPairs = matchedPairs + 1;
           setMatchedPairs(newMatchedPairs);
-          setScore(s => s + 10);
-          
+
           if (newMatchedPairs === totalPairs) {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            speak("太棒了！全部配對完成！");
-            setTimeout(() => setRound(r => r + 1), 1500);
+            handleLevelComplete();
           }
         } else {
-          speak("不一樣喔，再記一次！");
-          setCards(prev => prev.map(c => 
-            c.id === first || c.id === second 
-              ? { ...c, isFlipped: false } 
+          // NO MATCH
+          speak("再試一次！");
+          setCards(prev => prev.map(c =>
+            c.id === firstId || c.id === secondId
+              ? { ...c, isFlipped: false }
               : c
           ));
         }
-        
+
         setFlippedCards([]);
         setIsChecking(false);
       }, 1000);
     }
   };
 
-  const restart = () => {
-    setRound(0);
-    setScore(0);
-    setIsGameOver(false);
-    setMatchedPairs(0);
+  const handleLevelComplete = () => {
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    speak("太棒了！過關！");
+
+    setTimeout(() => {
+      if (level < 3) {
+        setLevel(l => l + 1);
+      } else {
+        setIsGameOver(true);
+      }
+    }, 2000);
   };
 
-  const gridCols = totalPairs === 6 ? "grid-cols-4" : "grid-cols-4";
-  const cardSize = totalPairs === 6 
-    ? "w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20" 
-    : "w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16";
+  const restart = () => {
+    setLevel(1); // Reset to level 1 on full restart
+  };
+
+  const gridCols = totalPairs === 6 ? "grid-cols-3 sm:grid-cols-4" : "grid-cols-4";
+  const cardSize = totalPairs === 6
+    ? "w-20 h-24 sm:w-24 sm:h-32 md:w-28 md:h-36"
+    : "w-16 h-20 sm:w-20 sm:h-28 md:w-24 md:h-32";
 
   return (
     <Layout>
       <GameShell
-        title="魔法翻翻牌"
-        score={score}
-        totalQuestions={5}
-        currentQuestionIndex={round}
+        title={`魔法翻翻牌 - Level ${level}`}
+        score={level * 100 + matchedPairs * 10}
+        totalQuestions={3} // 3 Levels
+        currentQuestionIndex={level - 1}
         gameType="memory"
         isGameOver={isGameOver}
         onRestart={restart}
         colorClass="bg-[hsl(var(--macaron-purple))] text-[hsl(var(--macaron-purple-dark))]"
       >
-        <div className="flex flex-col items-center gap-3 sm:gap-4 md:gap-6">
-          <h3 className="font-display text-base sm:text-lg md:text-xl font-bold text-center px-2">
-            找到一樣的動物朋友！
-          </h3>
+        <div className="flex flex-col items-center gap-4 w-full max-w-4xl mx-auto">
+          {/* Level Info Header */}
+          <div className="flex items-center gap-2 bg-white/50 px-6 py-2 rounded-full shadow-sm">
+            <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+            <span className="font-bold text-lg text-purple-700">{currentLevelConfig.name}</span>
+            <span className="text-purple-400">|</span>
+            <span className="text-sm text-purple-600">{currentLevelConfig.description}</span>
+          </div>
 
           {/* Progress */}
-          <div className="text-sm sm:text-base font-medium">
-            已配對：{matchedPairs} / {totalPairs}
+          <div className="text-sm font-bold text-purple-400">
+            配對進度：{matchedPairs} / {totalPairs}
           </div>
 
           {/* Card Grid */}
-          <div className={`grid ${gridCols} gap-2 sm:gap-3`}>
+          <div className={`grid ${gridCols} gap-3 sm:gap-4 p-2`}>
             {cards.map((card) => (
               <motion.button
                 key={card.id}
                 onClick={() => handleCardClick(card.id)}
                 disabled={card.isFlipped || card.isMatched || isChecking}
                 className={`
-                  ${cardSize} rounded-xl sm:rounded-2xl shadow-lg relative
-                  ${card.isMatched ? 'opacity-0 pointer-events-none' : ''}
+                  relative rounded-xl sm:rounded-2xl shadow-xl transition-all duration-300 transform perspective-1000
+                  ${cardSize}
+                  ${card.isMatched ? 'opacity-0 pointer-events-none scale-0' : 'opacity-100'}
                 `}
-                whileHover={{ scale: card.isFlipped || card.isMatched ? 1 : 1.05 }}
+                whileHover={{ scale: 1.05, rotate: 1 }}
                 whileTap={{ scale: 0.95 }}
-                data-testid={`card-${card.id}`}
               >
                 <motion.div
-                  className="w-full h-full relative"
+                  className="w-full h-full relative preserve-3d"
                   initial={false}
                   animate={{ rotateY: card.isFlipped ? 180 : 0 }}
-                  transition={{ duration: 0.4 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
                   style={{ transformStyle: "preserve-3d" }}
                 >
                   {/* Card Back */}
-                  <div 
-                    className="absolute inset-0 bg-[hsl(var(--macaron-purple))] rounded-xl sm:rounded-2xl flex items-center justify-center border-4 border-white"
+                  <div
+                    className="absolute inset-0 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl sm:rounded-2xl flex items-center justify-center border-4 border-white shadow-inner backface-hidden"
                     style={{ backfaceVisibility: "hidden" }}
                   >
-                    <span className="text-xl sm:text-2xl md:text-3xl text-white">?</span>
+                    <span className="text-3xl sm:text-4xl text-white opacity-80 font-black">?</span>
                   </div>
-                  
+
                   {/* Card Front */}
-                  <div 
-                    className="absolute inset-0 bg-white rounded-xl sm:rounded-2xl flex items-center justify-center border-4 border-[hsl(var(--macaron-purple))]"
-                    style={{ 
+                  <div
+                    className={`
+                        absolute inset-0 bg-white rounded-xl sm:rounded-2xl flex items-center justify-center border-4 
+                        ${card.type === 'text' ? 'border-pink-300 bg-pink-50' : 'border-purple-300'}
+                        shadow-sm backface-hidden
+                    `}
+                    style={{
                       backfaceVisibility: "hidden",
                       transform: "rotateY(180deg)"
                     }}
                   >
-                    <span className="text-2xl sm:text-3xl md:text-4xl">{card.emoji}</span>
+                    <span className={`
+                        font-black text-center px-1
+                        ${card.type === 'text' ? 'text-lg sm:text-xl text-purple-600 font-display' : 'text-4xl sm:text-6xl'}
+                    `}>
+                      {card.content}
+                    </span>
                   </div>
                 </motion.div>
               </motion.button>
             ))}
           </div>
-
-          {/* Hint */}
-          <p className="text-xs sm:text-sm text-center opacity-70 px-4">
-            翻開兩張卡片，如果圖案一樣就會消失得分！
-          </p>
         </div>
       </GameShell>
     </Layout>
