@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 /// <reference types="vitest" />
 import react from "@vitejs/plugin-react";
 import path from "path";
+import fs from "fs";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { VitePWA } from "vite-plugin-pwa";
 
@@ -43,6 +44,18 @@ export default defineConfig({
         ),
       ]
       : []),
+    {
+      name: 'copy-404',
+      closeBundle() {
+        const outDir = path.resolve(import.meta.dirname, "dist/public");
+        const indexHtml = path.resolve(outDir, "index.html");
+        const notFoundHtml = path.resolve(outDir, "404.html");
+        if (fs.existsSync(indexHtml)) {
+          fs.copyFileSync(indexHtml, notFoundHtml);
+          console.log('✨ Created 404.html for GitHub Pages SPA support');
+        }
+      }
+    }
   ],
   resolve: {
     alias: {
