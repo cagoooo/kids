@@ -62,10 +62,11 @@ export function useTTS() {
 
       utterance.onerror = (e) => {
         // Ignore interrupted errors as they are expected when user clicks quickly
-        if (e.error === 'interrupted' || e.error === 'canceled') {
+        // 'not-allowed' often happens on mobile if autoplay is blocked or screen locked
+        if (['interrupted', 'canceled', 'not-allowed'].includes(e.error)) {
           return;
         }
-        console.error('Speech synthesis error:', e);
+        console.warn('Speech synthesis error:', e.error); // Log just the string, and use warn to be less alarming
       };
 
       window.speechSynthesis.speak(utterance);
