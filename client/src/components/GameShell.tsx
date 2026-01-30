@@ -4,6 +4,7 @@ import confetti from "canvas-confetti";
 import { ArrowLeft, Star, Gift } from "lucide-react";
 import { Link } from "wouter";
 import { useAddScore } from "@/hooks/use-scores";
+import { useUser } from "@/hooks/use-user-context";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
