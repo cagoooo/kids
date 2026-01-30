@@ -3,11 +3,12 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 interface UserProfile {
     name: string;
     avatar: string; // Emoji character
+    decorationId?: number | null; // Sticker ID for decoration
 }
 
 interface UserContextType {
     profile: UserProfile;
-    updateProfile: (name: string, avatar: string) => void;
+    updateProfile: (name: string, avatar: string, decorationId?: number | null) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -17,15 +18,15 @@ const DEFAULT_AVATAR = "😊";
 export function UserProvider({ children }: { children: React.ReactNode }) {
     const [profile, setProfile] = useState<UserProfile>(() => {
         const saved = localStorage.getItem("kidszone_user");
-        return saved ? JSON.parse(saved) : { name: "", avatar: DEFAULT_AVATAR };
+        return saved ? JSON.parse(saved) : { name: "", avatar: DEFAULT_AVATAR, decorationId: null };
     });
 
     useEffect(() => {
         localStorage.setItem("kidszone_user", JSON.stringify(profile));
     }, [profile]);
 
-    const updateProfile = (name: string, avatar: string) => {
-        setProfile({ name, avatar });
+    const updateProfile = (name: string, avatar: string, decorationId?: number | null) => {
+        setProfile({ name, avatar, decorationId });
     };
 
     return (

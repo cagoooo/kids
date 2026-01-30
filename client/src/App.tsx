@@ -14,7 +14,7 @@ const ColorGame = lazy(() => import("@/pages/ColorGame"));
 const MathGame = lazy(() => import("@/pages/MathGame"));
 const EnglishGame = lazy(() => import("@/pages/EnglishGame"));
 const ShapeGame = lazy(() => import("@/pages/ShapeGame"));
-const MelodyGame = lazy(() => import("@/pages/MelodyGame"));
+const RhythmGame = lazy(() => import("@/pages/RhythmGame"));
 const ClockGame = lazy(() => import("@/pages/ClockGame"));
 const BopomofoGame = lazy(() => import("@/pages/BopomofoGame"));
 const EmotionGame = lazy(() => import("@/pages/EmotionGame"));
@@ -58,7 +58,7 @@ function Router() {
         <Route path={base + "/game/math"} component={MathGame} />
         <Route path={base + "/game/english"} component={EnglishGame} />
         <Route path={base + "/game/shape"} component={ShapeGame} />
-        <Route path={base + "/game/melody"} component={MelodyGame} />
+        <Route path={base + "/game/melody"} component={RhythmGame} />
         <Route path={base + "/game/clock"} component={ClockGame} />
         <Route path={base + "/game/bopomofo"} component={BopomofoGame} />
         <Route path={base + "/game/emotion"} component={EmotionGame} />
