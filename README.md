@@ -1,5 +1,7 @@
 # KidsZone Learning Games (童樂學園)
 
+🌐 **線上使用：[童趣學園](https://cagoooo.github.io/kids/)**
+
 ## v1.5.0 更新日誌 (2026/01/30)
 - 💰 **星星幣經濟系統**：
     - **賺取金幣**：每日簽到 (+10) 與遊玩遊戲 (分數/10) 皆可獲得金幣。
@@ -129,7 +131,7 @@ MIT License
 - Repository：`cagoooo/kids`
 - 可見性：公開
 - 主要技術：TypeScript、React、Vite、Firebase、Tailwind CSS
-- 線上入口：未在 GitHub repository metadata 設定
+- 線上入口：<https://cagoooo.github.io/kids/>
 
 ### 可以怎麼應用
 
