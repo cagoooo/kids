@@ -7,6 +7,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   const { isMuted, toggleMute } = useSound();
+  // 遊戲進行頁（/game/...）不顯示署名，只在首頁與選單類頁面顯示
+  const isGamePage = location.startsWith(base + "/game/");
 
   return (
     <div className="min-h-screen flex flex-col font-body">
@@ -86,8 +88,32 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* Footer */}
-      <footer className="p-6 text-center text-[hsl(var(--macaron-purple-dark))] opacity-60 font-display text-sm">
-        用愛製作 · 馬卡龍主題
+      <footer className="p-6 text-center print:hidden">
+        <p className="text-[hsl(var(--macaron-purple-dark))] opacity-60 font-display text-sm">
+          用愛製作 · 馬卡龍主題
+        </p>
+        {!isGamePage && (
+          <div className="mt-3 max-w-4xl mx-auto bg-white/60 backdrop-blur-md rounded-3xl md:rounded-full shadow-md border-2 border-white px-4 md:px-6 py-3 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-3">
+            <p className="text-[hsl(var(--macaron-purple-dark))] text-sm md:text-base">
+              Made with <span className="inline-block mx-0.5" aria-label="愛心">❤️</span> by{" "}
+              <a
+                href="https://cagoooo.github.io/Akai/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="阿凱老師教育科技創新專區"
+                className="font-bold text-[hsl(var(--macaron-pink-dark))] border-b-2 border-dotted border-current hover:opacity-80 transition-opacity"
+              >
+                阿凱老師
+              </a>
+              <span className="block md:inline text-gray-600">
+                <span className="hidden md:inline" aria-hidden="true">・</span>桃園市龍潭區石門國民小學
+              </span>
+            </p>
+            <span className="inline-block px-3 py-0.5 rounded-full text-xs font-bold text-[hsl(var(--macaron-purple-dark))] bg-[hsl(var(--macaron-purple)/0.35)] border border-white">
+              v1.5.1
+            </span>
+          </div>
+        )}
       </footer>
     </div>
   );
